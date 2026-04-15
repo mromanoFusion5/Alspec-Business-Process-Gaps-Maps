@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alspec D365 – Business Process Gap Map | Fusion5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ── Fusion5 Primary ─────────────────────────── */
+    --coral:          #FF5C39;
+    --violet:         #3B1D4E;
+    --russian-violet: #2B143B;
+    /* ── Fusion5 Supporting ──────────────────────── */
+    --rose-tea:       #A993B8;
+    --camille-grey:   #3A687E;
+    --monarch-bay:    #64ABB8;
+    --jet:            #3F3B42;
+    --pale-vale:      #DFDAE2;
+    --wisterlight:    #B7A6C4;
+    --nova-blue:      #AEDBE2;
+    --aprica:         #F47E5D;
+    --steelwake:      #83B8C3;
+    /* ── Gap type colours ────────────────────────── */
+    --ext-bg: #F0EBF5;    --ext-border: #806E8A;    --ext-text: #3B1D4E;
+    --cust-bg: #FFF0EC;   --cust-border: #FF5C39;   --cust-text: #B5452E;
+    --config-bg: #EAF4F5; --config-border: #3A687E;  --config-text: #2B4F5E;
+    --int-bg: #E8F7F8;    --int-border: #64ABB8;     --int-text: #2B4F5E;
+    --rep-bg: #F5F0FB;    --rep-border: #A993B8;     --rep-text: #3B1D4E;
+    --sec-bg: #FDECEA;    --sec-border: #B5452E;     --sec-text: #7f1212;
+    /* ── Phase colours ───────────────────────────── */
+    --phase-impl: #3B1D4E;
+    --phase-cr:   #FF5C39;
+    --phase-pgl:  #3A687E;
+    /* ── UI ──────────────────────────────────────── */
+    --bg-page: #F4F1F7;
+    --bg-white: #FFFFFF;
+    --border-light: #DFDAE2;
+    --text-dark: #3F3B42;
+    --text-mid: #806E8A;
+    --font: 'Plus Jakarta Sans', Calibri, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg-page);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ──────────────────────────────────────────────────────────── */
+  .page-header {
+    background: linear-gradient(135deg, var(--russian-violet) 0%, var(--violet) 60%, #5a2d72 100%);
+    color: white;
+    padding: 0;
+    border-bottom: 4px solid var(--coral);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Decorative coral circle — brand element */
+  .page-header::before {
+    content: '';
+    position: absolute;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,92,57,0.18) 0%, transparent 70%);
+    top: -80px; right: -60px;
+    pointer-events: none;
+  }
+  .page-header::after {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(100,171,184,0.15) 0%, transparent 70%);
+    bottom: -60px; left: 30%;
+    pointer-events: none;
+  }
+  .header-inner {
+    padding: 24px 36px 22px;
+    position: relative;
+    z-index: 1;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .header-logo img {
+    height: 48px;
+    width: auto;
+    display: block;
+  }
+  .header-badge {
+    background: rgba(255,92,57,0.18);
+    border: 1px solid rgba(255,92,57,0.4);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--aprica);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .header-title h1 {
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    line-height: 1.15;
+    color: #fff;
+  }
+  .header-title h1 span { color: var(--coral); }
+  .header-title p {
+    font-size: 0.82rem;
+    color: var(--rose-tea);
+    margin-top: 5px;
+    font-weight: 400;
+  }
+  .header-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .meta-card {
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 10px 16px;
+    text-align: center;
+    min-width: 88px;
+    backdrop-filter: blur(4px);
+  }
+  .meta-card .num { font-size: 1.7rem; font-weight: 800; line-height: 1; color: var(--coral); }
+  .meta-card .lbl { font-size: 0.65rem; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 3px; font-weight: 600; }
+
+  /* ── FILTER BAR ──────────────────────────────────────────────────────── */
+  .filter-bar {
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border-light);
+    padding: 10px 36px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(59,29,78,0.08);
+  }
+  .filter-label { font-size: 0.7rem; font-weight: 700; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.6px; margin-right: 2px; }
+  .filter-btn {
+    padding: 5px 13px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border-light);
+    font-family: var(--font);
+    font-size: 0.73rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--bg-page);
+    color: var(--text-mid);
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--coral); color: var(--violet); }
+  .filter-btn.active { color: white; border-color: transparent; }
+  .filter-btn[data-phase="all"].active   { background: var(--violet); }
+  .filter-btn[data-phase="impl"].active  { background: var(--phase-impl); }
+  .filter-btn[data-phase="cr"].active    { background: var(--phase-cr); }
+  .filter-btn[data-phase="pgl"].active   { background: var(--phase-pgl); }
+  .filter-btn[data-gtype].active { background: var(--violet); border-color: var(--violet); }
+  .sep { width: 1px; height: 22px; background: var(--border-light); margin: 0 4px; }
+
+  /* ── LEGEND ──────────────────────────────────────────────────────────── */
+  .legend {
+    background: var(--bg-white);
+    padding: 8px 36px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .legend-label { font-size: 0.68rem; font-weight: 700; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.5px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: var(--text-dark); font-weight: 500; }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid; flex-shrink: 0; }
+  .legend-phase { display: flex; align-items: center; gap: 5px; font-size: 0.72rem; font-weight: 500; color: var(--text-dark); }
+  .legend-phase-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── SWIMLANES ───────────────────────────────────────────────────────── */
+  .swimlanes { padding: 20px 36px; display: flex; flex-direction: column; gap: 14px; }
+
+  .swimlane {
+    background: var(--bg-white);
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    box-shadow: 0 1px 6px rgba(59,29,78,0.07);
+  }
+  .lane-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+  }
+  .lane-header .lane-title { display: flex; align-items: center; gap: 9px; }
+  .lane-header .lane-meta  { font-size: 0.68rem; opacity: 0.82; font-weight: 500; }
+  .lane-toggle { font-size: 0.8rem; opacity: 0.75; transition: transform 0.2s; }
+  .swimlane.collapsed .lane-toggle { transform: rotate(-90deg); }
+  .lane-body { padding: 14px 18px; display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+  .swimlane.collapsed .lane-body { display: none; }
+
+  /* Lane gradients — all use Fusion5 palette */
+  .lane-otc .lane-header  { background: linear-gradient(90deg, #3B1D4E, #5a2d72); }
+  .lane-log .lane-header  { background: linear-gradient(90deg, #2B143B, #3B1D4E); }
+  .lane-wms .lane-header  { background: linear-gradient(90deg, #3A687E, #4A808A); }
+  .lane-ret .lane-header  { background: linear-gradient(90deg, #806E8A, #A993B8); }
+  .lane-pln .lane-header  { background: linear-gradient(90deg, #FF5C39, #F47E5D); }
+  .lane-pro .lane-header  { background: linear-gradient(90deg, #B5452E, #FF5C39); }
+  .lane-prc .lane-header  { background: linear-gradient(90deg, #2B4F5E, #3A687E); }
+  .lane-fin .lane-header  { background: linear-gradient(90deg, #3F3B42, #5a555e); }
+  .lane-mds .lane-header  { background: linear-gradient(90deg, #2B143B, #806E8A); }
+
+  /* ── FDD CARD ─────────────────────────────────────────────────────────── */
+  .fdd-card {
+    background: #FAFAFA;
+    border-radius: 10px;
+    border: 1.5px solid var(--border-light);
+    padding: 13px 15px 11px;
+    min-width: 192px;
+    max-width: 225px;
+    flex: 0 0 auto;
+    cursor: pointer;
+    transition: all 0.18s;
+    position: relative;
+  }
+  .fdd-card:hover {
+    border-color: var(--coral);
+    box-shadow: 0 4px 18px rgba(255,92,57,0.16);
+    transform: translateY(-2px);
+    background: var(--bg-white);
+  }
+  .fdd-card.dimmed { opacity: 0.25; pointer-events: none; }
+
+  .card-phase {
+    position: absolute;
+    top: -1px; right: -1px;
+    padding: 2px 8px;
+    border-radius: 0 8px 0 8px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: white;
+  }
+  .card-phase.impl { background: var(--phase-impl); }
+  .card-phase.cr   { background: var(--phase-cr); }
+  .card-phase.pgl  { background: var(--phase-pgl); }
+
+  .card-ref { font-size: 0.66rem; font-weight: 700; color: var(--coral); text-transform: uppercase; letter-spacing: 0.5px; }
+  .card-title { font-size: 0.8rem; font-weight: 700; color: var(--violet); margin: 3px 0 2px; line-height: 1.3; padding-right: 22px; }
+  .card-subtitle { font-size: 0.68rem; color: var(--text-mid); margin-bottom: 9px; line-height: 1.3; }
+
+  .gap-summary { display: flex; align-items: baseline; gap: 5px; margin-bottom: 7px; }
+  .gap-total { font-size: 1.4rem; font-weight: 800; color: var(--coral); line-height: 1; }
+  .gap-total-lbl { font-size: 0.68rem; color: var(--text-mid); font-weight: 600; }
+
+  .gap-badges { display: flex; flex-wrap: wrap; gap: 3px; }
+  .badge {
+    font-size: 0.62rem; font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+    border: 1.5px solid;
+    white-space: nowrap;
+    font-family: var(--font);
+  }
+  .badge.ext    { background: var(--ext-bg);    border-color: var(--ext-border);    color: var(--ext-text); }
+  .badge.cust   { background: var(--cust-bg);   border-color: var(--cust-border);   color: var(--cust-text); }
+  .badge.config { background: var(--config-bg); border-color: var(--config-border); color: var(--config-text); }
+  .badge.int    { background: var(--int-bg);    border-color: var(--int-border);    color: var(--int-text); }
+  .badge.rep    { background: var(--rep-bg);    border-color: var(--rep-border);    color: var(--rep-text); }
+  .badge.sec    { background: var(--sec-bg);    border-color: var(--sec-border);    color: var(--sec-text); }
+
+  /* ── PANEL ───────────────────────────────────────────────────────────── */
+  .gap-panel {
+    position: fixed;
+    right: 0; top: 0; bottom: 0;
+    width: 420px;
+    background: var(--bg-white);
+    box-shadow: -4px 0 28px rgba(59,29,78,0.18);
+    z-index: 200;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .gap-panel.open { display: flex; }
+  .panel-header {
+    background: linear-gradient(135deg, var(--russian-violet), var(--violet));
+    color: white;
+    padding: 18px 20px 14px;
+    border-bottom: 3px solid var(--coral);
+    position: relative;
+  }
+  .panel-header .p-ref   { font-size: 0.7rem; font-weight: 700; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.5px; }
+  .panel-header .p-title { font-size: 0.96rem; font-weight: 700; margin: 4px 0 2px; line-height: 1.3; }
+  .panel-header .p-sub   { font-size: 0.73rem; color: var(--rose-tea); }
+  .panel-close {
+    position: absolute; top: 14px; right: 16px;
+    background: rgba(255,255,255,0.15);
+    border: none; color: white; width: 28px; height: 28px;
+    border-radius: 50%; cursor: pointer; font-size: 0.95rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s; font-family: var(--font);
+  }
+  .panel-close:hover { background: rgba(255,92,57,0.4); }
+  .panel-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+
+  .panel-section { margin-bottom: 16px; }
+  .panel-section-title {
+    font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: var(--coral);
+    border-bottom: 2px solid var(--pale-vale);
+    padding-bottom: 4px; margin-bottom: 8px;
+  }
+  .gap-item {
+    display: flex; gap: 10px; padding: 8px 10px;
+    background: var(--bg-page);
+    border-radius: 7px; margin-bottom: 6px;
+    border-left: 3px solid var(--border-light);
+  }
+  .gap-item .gap-id   { font-size: 0.63rem; font-weight: 700; color: var(--violet); min-width: 54px; }
+  .gap-item .gap-desc { font-size: 0.74rem; color: var(--text-dark); line-height: 1.35; }
+  .meta-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 10px; }
+  .meta-chip { font-size: 0.68rem; padding: 3px 10px; border-radius: 12px; font-weight: 700; color: white; }
+  .meta-chip.impl { background: var(--violet); }
+  .meta-chip.cr   { background: var(--coral); }
+  .meta-chip.pgl  { background: var(--camille-grey); }
+  .meta-chip.wo   { background: var(--wisterlight); color: var(--violet); }
+  .devops-ref { font-size: 0.7rem; color: var(--text-mid); padding: 4px 0 8px; }
+  .devops-ref strong { color: var(--text-dark); }
+
+  /* ── OVERLAY ─────────────────────────────────────────────────────────── */
+  .overlay { position: fixed; inset: 0; background: rgba(43,20,59,0.3); z-index: 190; display: none; }
+  .overlay.open { display: block; }
+
+  /* ── FOOTER ──────────────────────────────────────────────────────────── */
+  .page-footer {
+    background: var(--violet);
+    border-top: 3px solid var(--coral);
+    padding: 14px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-text { font-size: 0.72rem; color: var(--rose-tea); }
+  .footer-brand { font-size: 0.72rem; color: rgba(255,255,255,0.5); font-weight: 600; letter-spacing: 0.3px; }
+  .footer-brand span { color: var(--coral); }
+
+  @media (max-width: 700px) {
+    .header-inner, .swimlanes, .filter-bar, .legend { padding-left: 14px; padding-right: 14px; }
+    .gap-panel { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="header-logo">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABpkAAAOSCAYAAACPxrinAAAACXBIWXMAAC4jAAAuIwF4pT92AAAgAElEQVR4nOzd7VVjR9o14O1Z/g8TAXIEMBGgicA8EbQcQeMIrInATARWR2AcgdURGCKwiGAggn5/FHrB7f6g0JHqfFzXWlp4emzYaiEJap+76psPHz4EAAAAAAAAavyjdQAAAAAAAACGR8kEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQTckEAAAAAABANSUTAAAAAAAA1ZRMAAAAAAAAVFMyAQAAAAAAUE3JBAAAAAAAQDUlEwAAAAAAANWUTAAAAAAAAFRTMgEAAAAAAFBNyQQAAAAAAEA1JRMAAAAAAADVlEwAAAAAAABUUzIBAAAAAABQ7dvWAQAmbP74cfZ4S5LjJGev+Fz3SW6e/e/148fN4w0AAAAAoFPffPjwoXUGgDE7SymQzh5vx0nOG+S4SymbblIKqfWzfwYAAAAAqKZkAujOLKVImj9+bFEm1XpIKZvWzz4qngAAAACAr1IyAbzecUqhdPH48aRlmA7dpZRN29umXRQAAAAAoK+UTAB1Znkqlb5vmuRwblPKpus8nfUEAAAAAEyckgng645TiqVFhrEF3j49pJRN2xsAAAAAMFFKJoDPm6cUS2/axugthRMAAAAATJiSCeDvFkkuk5w2zjEk28LpKslN4ywAAAAAwAEomQCK45RiaZHkpG2UwbtNKZuuk9w3zgIAAAAA7ImSCZi6bbl0meSocZax2U43LZNsmiYBAAAAADqnZAKmbJFSgJhc2r/3KX/X67YxAAAAAICuKJmAKZqnFB7nbWNM0nYrvVXjHAAAAADAjpRMwJQcp5RLbxvnILlLeSxWbWMAAAAAAK+lZAKmYp5SaNgar1/uUs7Dum4dBAAAAACo823rAAB7Znqp306SXETJBNBXs8fbWcp76qfcJ7lJsnm8AQAAMBFKJmDMzlKml04b5+DLVq0DAPD/zVLK//nj7ajyv39Isn68XUfpBAAAMGq2ywPGapHkKvWLYxzWXcqCJgDtHKcUS5fp/sKM25T34+uUiScAAABGRMkEjNFVbI83FD/EJBNAK8cpxdJl9n9RxkPK+/NVlE0AAACjoWQCxuQ4ZfHqTesgvMhDyhSTxUaAw7tMObPw0BO/D49f9+rAXxcAAIA9UDIBY3Gccv6D85eG413KtoYAHE5fziu8TXkPuGmcAwAAgB38o3UAgA4omIbJVewAh3WZ5I/04/3yNCXLZesgAAAAvJ5JJmDoFEzDdJtyNT0A+9f37WTfpZRNtk8FAAAYGCUTMGQKpuH6IWW7JgD2ayjvlbdJ5lE0AQAADIqSCRiqoSya8XcPSWaxkAiwb0N7r1Q0AQAADIwzmYChus5wFs34q+tYQATYt6EVTEnJuk7JDgAAwAAomYAhWiU5bx2CV7tqHQBgAq4yrIJp6zTeJwAAAAZDyQQMzWX6e3A5X3eb5KZ1CICRW2bY75VvUu4DAAAAPedMJmBI5kl+bx2CnfyQMokGwH6cJfmjdYiO/CsuTAAAAOg1JRMwFMdJNkmOGufg9R6SzOI8JoB92iQ5aR2iI3cp7xsAAAD0lO3ygKG4joJp6K6jYALYp2XGUzAl5b4sW4cAAADg80wyAUNwmeTn1iHYmW2PAPZnlvIaO7YLMkzBAgAA9JhJJqDvZnEV8xjcRsEEsE/LjK9gSsp9umodAgAAgE8zyQT03TrJeesQ7OyHJKvWIQBG6jjJ/1qH2CPTTAAAAD1lkgnos0UUTGPwkHIeEwD7sWgdYM+OMv77CAAAMEgmmYC+Ok6yyTi3/pmad7E4CLBPmyQnrUPs2V3KNBMAAAA9YpIJ6KtlFExj4SwNgP05y/gLpqTcx7PWIQAAAPgrJRPQR7Mkb1uHoBO3SW5ahwAYsYvWAQ5oSvcVAABgEJRMQB8tWwegM6aYAPZrSsXLvHUAAAAA/sqZTEDfzJL82ToEnXhIeTzvG+cAGLOp/TD/TesAAAAAPDHJBPTNsnUAOnMdBRPAPs1bB2hg3joAAAAAT5RMQJ/MkrxpHYLO2CoPYL9mrQM0MGsdAAAAgCdKJqBPlq0D0JnbJDetQwCM3Kx1gAZmrQMAAADwRMkE9MVxTDGNiSkmgP07bh2ggSneZwAAgN76tnUAgEeL1gEG4v2zf77Jp888OsvTItxZkqN9h/rIQ5LVgb8mwBSdtQ7QwBTvMwAAQG8pmYC+uGwdoGfeJ1kn2Tze1jt+vnlK8XT2+M/7LJ9We/q8AAAAAECPKJmAPpgnOWkdorHblCLpOrsXSp+y/ZzXz/5slvJ3v7119RjYKg8AAAAAJkDJBPTBonWARrbbyq1Str47tM2zr588TTktkpy+8nO+f/y8AAAAAMDI/aN1AIAkF60DHNhdkh9Stq+7TJuC6VNuUqaQzpL8MyXjb5WfY9VxJgA+b9M6QAOb1gEAAAB4omQCWrvI/s4G6puHlOJmlv6XMfcpGS+SfJfkx5Qt/b5kO5kFwGFsWgdoYNM6AAAAAE+UTEBrU5li+m+GUS59yiZPE07/SvIupVD62OpwkQBIuSBgaqZ4nwEAAHrrmw8fPrTOAEzbfcY9yfSQUqStG+fo2nHK/brM0/lN38UV5gCHNE/ye+sQB/bvjO89FQAAYLCUTEBL84x7cew25T6O/arr+eNt2TQFwPQcJ/lf6xAH9s+M/30VAABgML5tHQCYtDFvlfcuyaJ1iANZx1XlAC3cJ7lLctI6yIHcRcEEAADQK85kAlqatw6wJ1MqmABoa906wAGtWwcAAADgr5RMQCvHeTrLZ0wUTAAc0nXrAAc0pfsKAAAwCM5kAlq5SPJr6xAdm8oZTAD0y32So9Yh9uwh5QIVAAAAesQkE9DKWesAHXtIKc4UTAAc2hQmfKZwHwEAAAbHJBPQyjrJeesQHfq/WAADoI1Zkj9bh9iz75JsWocAAADgr0wyAa2MqWD6LQomANrZJHnfOsQevY+CCQAAoJeUTEALY9oq7yHJZesQAEzesnWAPVq2DgAAAMCnKZmAFmatA3ToKq6uBqC9dZJ3rUPswbuU+wYAAEAPKZmAFsYyyfSQUjIBQB8sU96bxuIhppgAAAB6TckEtDCWkuk6yX3rEADwaJNxlTLLmBYGAADotW8+fPjQOgMwPesk561DdOC7WPwCoH+uk3zfOsSOfkty0ToEAAAAX6ZkAloYwwvPbcYzkQXAuBynXNBx2jjHa90mmce0MAAAQO/ZLg/gdVatAwDAZ9wnWWSY5zM9pGRXMAEAAAyAkgk4tHnrAB25bh0AAL7gJuU9d0hF00NK5pvGOQAAAHghJRNAvds4iwmA/htS0aRgAgAAGCAlE3BoYzjHaN06AAC80LZoum2c40u2ZzApmAAAAAZGyQQc2nHrAB2wCAbAkGyLpt8a5/iU36JgAgAAGCwlE0A9C2EADM19koskP6Yf2+c9pGS5SMkGAADAACmZgEMbw3Z5SiYAhuoq5b34fcMM7x8zXDXMAAAAQAeUTMChDX27vJaLcgDQhU3KFnX/zmHf194/fs35YwYAAAAGTskEAADTtM5T2fRuj1/nXZ7KpfUevw4AAAAH9m3rAAADs24dAAA6tn68XaackXSRUggdvfLzPTx+vuvHmzOXAAAARkrJBAAAJKUMWj3eknJu0lmS2ePHz215e59yXuHm8aOzCwEAACZCyQQAAHyKwggAAIAvciYTQB2LbQAAAAAAUTIB1HKuBAAAAABAlEwAAAAAAAC8gjOZAAB4qdnj7TjJ2Ud/9txZkqMvfJ6H/H370c3j7eN/XldmBAAAAA5EyQQAwMfOHm+zJPOUUum0w89/lOT8oz/7+H9/7H3KlqU3eSqh1h1mAgAAACopmQAApm2WUijNHz9+rexpZZvr+4/+/C6leLpJKZ1u4vw8aO35tGMe//l4h8+3ydN0Y6Jghn2aV/y76z1lAAAG5JsPHz60zgBMyzr9XcB8iX/HL1PA8F2kLCJdJDlpG2Uv7vJUOG0/At2Z5WnSMc8+fm2rzK7dpZRPH085Kpvh77bl7yxPF5gcp7tp5duU553nIwBMjJIJOLR1lEwAh3acUihd5O+TQFPwkPLavU5ynb9ORABfNs9ft9Acys9x27PfPr7BFBzn6bm7/XjIAvhj20J4HVPHADA6Sibg0NYZzuLEpyiZgCHZFktvWgfpmbuUsmn9+BEoZvnrwnSXZ7H1wbZ4Wj+7wRhsLyaZP96GMKV8m78+F5VOADBQSibg0NZRMgHs03GSyySLDGORqQ9+SymbrmORi2nZTjvMM97tM7/mfZ4KZ5NODMks5Xm7yDgKYe/FADBQSibg0NZRMgHswyzJMqaWdmWRi7Gb5alUmuL2mV+yPc9t+xoAfTPLuIqlz/FeDAADomSC6Vkm+al1CGhAQditZYb/WvJN6wAdmUW5tC/bRa5V4xywq+1WWpcZ98J0lx7ytMitcOrOOsO94Ox9SkHbwrZYmloxvH0eXsWk4b5cJPm1dQh6xe/NQLV/tA4AAMCrzFLKjz+jYNqX75P8knIV9SrlnBoYkouUBdr/pXwvK5he7ijltfXXJJuURe5ZwzxMz3HKRSSblO/DqRVMydPz8I+URe9FyzAj5WcbAHamZAIAGJbtopNy6XCeL3LdpCxyHbcMBF8wi4Xprp0keZvyuruOhW7263m59FOmeVbap5ynlOWbeA4CQK8omQAAhuMiT4tOtHGap0WuVUw20B/zPE03Wpjen+cL3csonOnOx+XSUcswPXYSZVOX5q0DADB8SiYAgP6bpVw9/2ssOvXFdrppO9kwbxmGSZunfA/+HtONh3SSUgRsYis9dncZ5VKt52XTRdsoADBtSiYAgH67SNmibagHpU/BecoC/yauquZw5nkql7w+tHOUp630VlE2UWee8t7xc5RLr3WSchHOOs4Xeg1/ZwDsTMkEANBPxykLlqaXhuP5VdWXsY0W+zGPcqmvttONy3j+82Xb9/jfY2vLrpynnJ24jOdfDT9jArAzJRMAQP+cpSwi2/pqmE5SrkrfxGIX3dm+LiiX+m+7jd6ybQx6ap7y/eE9fj9+SpkAnzfOMQSz1gEAGAclEwBAv1ykLCSfNs7B7o5isZndHaec+fNHlEtD8vz577wYtq5SimLTI/t1kvL3fBUXenzJrHUAAMZByQQA0B+L2B5vjJ4vNi+aJmFoLlO+b942zsHrPT8vZtY0CS3NUqZrPJcP622c1fQlCjgAOqFkAgDoh1XKeT6M1/Mzm+ZNk9B3263xfo7SeSzOU0qGZeMcHN485bE3odzGacrr6aJtjF5SvgHQCSUTAEB7qzibYUq22/isY7KBv1vG1nhjtZ1qvInF3alYxPZ4fXCUcpHHKqZ3AKBzSiYAgLZWUTBN1XmSP2OygeIspXz4qXUQ9u40pUi8bB2EvbqKCeW+eZNygYeiqZi3DgDAOCiZAADaWUXBhEUeStmwju20pubnWPAeq1Wcv9RXpynb1pomBICOKJkAANpYRcEEU3ec5DrOXpqy8zinbWxW8f7ed0cpBe9F4xytKdoA6ISSCQDg8C5jAQqmbrs93vetg9DcUcq5PcvGOdjdKt7fh+Ioya8p52ZNlYsbAOiEkgkA4LAuUqYWgOlapJzJc9I4B/3yU2yfN2RXUTAN0S+ZZtE0ax0AgPFQMgEAHM5ZylXOwHStUhY14VPOU4om21gNyyLOYBqyKRZNs9YBABgPJRMAwGEcpywu25oEpuk4ZXs8kw58zWlK0TRvG4MXmkdxPAZTK5pMTALQGSUTAMBhXKUsHALTc5ZSGngN4KW25zQtGufgy2ZJrluHoDNTKppMSwLQGSUTAMD+XcT0AkyVgold/JJk2ToEn3ScUjCZUB6XX1J+bgMAXkjJBACwX9tt8uBQzpJctg5BknJF/DoWodnNT/E+0kfLKI/HapXxT/rMWwcAYDyUTAAA+3UVC8wc1nGSn1PKjVnTJNO2SLki3vOfLryJoqlP5knetg7B3hylvIc6twgAXkDJBACwP/PYJo92zpPcxLY/LSxSCibokqKpH7bb5DFu26JprMY+qQXAASmZAAD256p1ACbvKMmv8b14SIsomNgfRVN7y5hQnIrTjPf90/cwAJ1RMgEA7McizmqgP96mTDXZ+me/FlEwsX+KpnbmsU3e1LzN+CaCZ60DADAuSiYAgP1Ytg4AHzlNsoktcvZlEQUTh6NoamPZOgBNrDKuYmbWOgAA46JkAgDo3iLJSesQ8AnbMyYWbWOMziIKJg5P0XRY5483puco43qumWoGoFNKJgCA7l22DgBfcJRSiCwb5xiLsyiYaEfRBIdxnvH8fGeiGYBOKZkAALo1j7OYGIafUhanXdH8emcpk2HQ0puYToRDWMZWcwDwN0omAIBuLVoHgApvUkoSRVO94yTXKZNh0Nov8f4D+3aU5Kp1iA7MWwcAYFy+bR0AAGBEjlMW7afmLsnN423zeHuJWZ6uCD5L+fubxXlWh3aa8thdPH7k645Tyjnfq/TJL3l6LQb24/uUkmbdNgYA9IeSCQCgOxetAxzQbylTHOu8vFSqMXu8zZ/9swPX9+ck5bGcxwL1S1zFtpj00zqltN+0jQGjdpVhn2s05OwA9JCSCQCgO4vWAfbsLuU8gusk93v+WpvH2/qjPz9LKUK2H02SdOco5e/7MuWsJj7tMtOcWGQYjlJeo+fZ/+s0TNVpys98q7YxXs02rwB0SskEANCN44x30mZbLq3axkjy962gZimLqdub0mk3RylbbiX9eLz7Zp7k59Yh4CtOU56/U5quhUNbZpjvk7PWAQAYn3+0DgAAMBJjXcz7T8qCxKptjM/apGRbpOT8V0rm21aBRuKXjONw8y4dp0yIwBB8nzJ1B+zHSYY5wT5rHQCA8VEyAQB0Y946QMceUgqbZeMctW5SMp8l+S7Jj1E4vdbb9LdcbOE6thhiWH7O+N6boE+WrQO8wnHrAACMj5IJAKAb89YBOnSbcqXrzVf+vb7b5Olw7u9SJpzuWgYaoDcpRdPUF6WWGe92mIzbdTx/YV+GOM101joAAOOjZAIA2N0s4zkL6DbjPDB+k1IUzJL8O8m7hlmG5k2Sdaa7UH2W5KfWIeCVjmIikeL9Rze6sWwdAABa+7Z1AACAERjLVaEPGWfB9LH14+0y5Qrky4ynJNyX05S/s3nG//3xnHOYdveQp6nI9bM/3zzePnaWp0Lz+Nn/Pt1LumnYns/knLXx2j7P1nl6bm1vLzF7vJ09+2h682VOUt4b121jvNi8dQAAxkfJBNOzSdsr184y7PMMbjOtxbUtizvwZWMpmeaZ1mvcfcqi61WSi5RFWItqn7ctmi7y8oXLoVtGAVnjLuV75ObZrfY1Zf2F/2/2eJunvO7OM+yfKw9pmVKYbtrGoCMPKY/nOk/F0i42j7f1R3++fZ5dxPvjlywynJIJADr3zYcPH1pnAKZlnWH/gvLvTPMXiHmS31uH2NFUH7t9WWb420d90+HnWmfYr21JOa9o2TpED5yllE1vDvg136fbK4vn2e9r9nbibehndn3NPMN/79u35wvd12lTUlsEf7muX2teYx2P02ttn2/b26Ed5+mCDBef/d0/M4wLde6jnOfL/N4MVHMmEwDA7matA+zoLrZR2rpJuSL5uzi36XOOUhYfxjLB9zmr1gF66iHlufF/KYvOi5S/q1aLqzcpr1/zlEXeH+K8mc85TykIGJb3Kd/X2+dbqy0871Oe62dJ/hXvkR9btA7wQgomADqnZAIA2N3Qt9NaZhhX3x7SJsqmLxl70bTM8J/XXbtNWeiepe1C95dsF8HnKc/d/6aUYjxZZvgXRkzF+5SJgnn6V3q7IOPvFq0DvMCsdQAAxknJBACwm1nrADvabr/Dp21iIe1ztkXTReMcXZtl+NuBdmm70H2WthNLtTYpUzuzlHLsrmWYHjlK/woL/up5ubRumuTrNnl6j5z6BOFp+n/hxax1AADGSckEALCbWesAO2p1jsrQbFIW0v4VC2nPHSX5NcO4gvulbB1ZDGmh+0u2002zKJu2zjO+cngM7lK2oZxneM+5TYweKXsAACAASURBVEru/8u0pwcXrQN8xXHrAACM07etAwAA0JQppjo3KQtp85SFa1uqFb88fly1DNGBeZLvW4do7C5loXTdNsZerFJe8y4fb1M+m+QqXv/75L8Zx9a11ymF7nVKmTk189YBvqLvk1bP3cYZcq3ctA4ADI+SCQBgN0P6hf1T/CL5OuuUhbTLlIXBKS9Wb42haFq1DtDQQ8r38tgnue5T7ucq5b5OtVQ8Sfl7WLaNMXkPKVNl68Y5unSfUrZcJXnbNsrBnab8bLBpG2MU7jOu5wXAqNkuDwBgN0PfemTTOsDAXaUsKP23cY6++CX93y7ocxaZ7mTa+5TCfOwF03OblMX9KW/vdZnhv4cN2W3K+8e6bYy9uUzZonJq+rwV5bx1gAqb1gEAeDklEwDAdDlbqBv3KYtpzmsqhlo0LVsHaOTHlIXHTdsYzWy39/qtcY4WjjKtYrFP3qUUu0PfHu9rVilnu02pyJ23DjASm9YBAHg5JRMAAHRje17Tj5nWgtqnDK1ousz0ppjuUopRJUNZ6L9Iee5OzZuUko3D+THDen3c1TrlvXEq74t93oJzSFs8b1oHAODllEwAANCt7RZ6U5yMeG4oRdNxpjfF9FvKYqMz2f7qKqV4m8pi+NaydYAJ+SHTLHZv0u9t5Lo2bx3gM4Z0fuSmdQAAXk7JBAAwXbPWAUZsOxkx5fNeklI0LVuH+IqLDGvhbVf/TbnPY9+m67VuUgq429ZBDsg002H8kLJ93FStM50zmuatA3zCrHWASpvWAQB4OSUTAMB0TW17sBamfN7L1k/p98LqsnWAA/ohZWtAvmyTskg8pTPWlq0DjNzUC6atVUrRPXbz1gE+YdY6QKVN6wAAvJySCQBg2oa0P/9QmWoqkxKr1iE+YZHplK0WuevcpywUv2uc41BMM+3Pf+K599xlxl/g+tlqN3etAwBQR8kEADBt89YBJmTqU01v0r8zmpatAxzAQ0rBuWqcY6gWmU7RtGgdYITeZRqvM7UuMu6LLo7Sv9J23jpAhU3rAADUUTIBAOxm0zrAjhatA0zMdqrpx4x7ge1zfkl/vufmGf8U00PK/bxunGPoFplG0XSZ5Lh1iBG5je0pP+c+/Xkv2BfTTK/nzECAgVEyAQDsZtM6wI5O07+rbafgKmUB6rZ1kAb6UjRNYfH3MslN6xAjscj4i6ajlBKc3T2k/F1aLP+864x7srdvJVPf8nyJ9y2AgVEyAQCwbB1gojYpiz5XjXO00Iei6fvGX3/fnMHUvUXGXzRNoXw9hMsM/yKUQ7jMeKd6560DfGRIU4rKWYCBUTIBAOxmDFdbvsmwrnAdm6luZda6aPqh4dfetx+jYNqXy4x7AvE03g929Vs8/15qk/FeaNG3UmfWOkCFMfxsDTApSiYAgN2M5WrLVesATFLLommVcU6lvMt4F2374D5lQuGucY59Ms30eg9pP6U5NFcZ5zTTaesAHxnSGYRj+dkaYDKUTAAAuxvDVe2nsTBNG7+k3bZCi4yraLqNBe5DuE85b2eMC+NJuW99m8IYimUskNe6z3h//ujLVODQns8mmQAGRskEALC7TesAHXkbC9S0cZ12i3GLJO8bfe0uPaR/Z4CM2U3GO/FzlFI0Uec24y1L9m2s00x9KXf6UnYBMFJKJgCA3Y3pisvW5+QwTUdJ1mm3EHaR4U8kXsQExaGtMq5JuOeUTPXGWjoewlinmZQ79cZw0QfA5CiZAAB2N6aSKSlF0xgXe+i3o5RF+xZXfm/P2Rlq0fSflJKOw7vMcL9vvuT79GcKYwjex3NwV6vWAfagL8+heesAAIybkgkAYHfr1gH24G3K/erLAgnTcJqydV4L9ylTfEPbsuk25RwY2th+34yRaaaXW7YOMAKbJL+1DtGxWesAA7RuHQCAekomAIDd3Se5ax1iD85TFn0WbWMwMedpd9X1zePXHlLRtGgdgNykTJONjZLpZUwxdWfVOkDHZq0DPLJtHwB7pWQCAOjGunWAPTlK2T5vHdutMA03Gc7i+n8yvu06h+oq47vY4PvWAQZi1TrAiFxnWCX/UAxpKn3dOgAA9ZRMAADdaLXF16GcJ/k9yiamYZ3kh9YhvuIuzk7rk7FumzeUwrWVuyiZujamn6f6MkE0ax0AgHFTMgEAdGPdOsCBbMumm5QF1SFdHQs1Vul30bRMKTboj3XK1mljMm8doOdWrQOM0JhKpqPWAR6dtA5QYd06AAD1lEwAAN24z/gOrP6S05Rt9DYpi2zzhllgX1ZJ3rUO8Qm3sbjdV4vWATpmkunLVq0DjNC6dYCRcTEQAHunZAIA6M6Yrr59qaMkb1KmmzZJLmNBg3FZpH9F02XrAHzWJv37ftnFSWy19Tm3KY833brP+CYCW+rLln0vcds6AACvo2QCAOjO1A+sPknyc5L/xXQT47JIfxa/3seV/n23bB2gY/PWAXpq1TrAiK1bB+iQC29ezhawAAOlZAIA6M59pjnN9CmmmxibefpRNF21DsBXbTKuaaZ56wA95f1+f9atA3So9STRvPHXr3HTOgAAr6NkAgDolgXgvzLdxFjcp3z/3jXMcBcL20MxpveC1ovkfWSrvP1atw5AEyaZAAZKyQQA0K2bOEvgc0w3MXT3SS7SblvMMRUXYzem94LTeL3+2Lp1gAnow+ToGAypJDbJBDBQSiYAgO4tWwfoOdNNDNlNyvdsi6Jp1eBr8nqr1gE6NKSF6kNYtw4wAQqHbgypIDbJBDBQSiYAgO6tM54r2PfNdBNDdJNkceCv+S4W4IbmOu2m3ro2bx2gZ9atA0yAkqkbs9YBKnjMAQZKyQQAsB/L1gEGxnQTQ3Od5IcDfz2G5T7jedxmrQP0yG0UvoegcOjGSesAFTyvAAZKyQQAsB/rJL+1DjFQz6ebFjHdRH+tkvx4gK/zkPGUFVMzlsfNdnlPlB+HsWkdYASG9PPTXesAALyekgkAYH8uM56tklo4SfJLykLTKhY56aerlK3s9mksRcUUjWXLvNPWAXpk0zrARGxaBxiBIf3ctGkdAIDXUzIBAOzPJmUBmt0cpUw3/ZGns3CGdHUu47fIfosmJdOwjeXxG9KC9T6tWweYkNvWATiYTesAALyekgkAYL+WsUjSpdOYbqLeIUrJRfb3XF/v6fNyGOvWATqi3C82rQNMiDN6djNvHaDCpnUAAF5PyQQAsH+LjGO7pD55Pt20Tvk7hs+5zGG+R+bpvmi6jYXWoVu3DtCReesAPbFpHWBCvPZNx6Z1AABeT8kEALB/NymL3OzHecp0033K9oSzpmnoq6vsf/LtPmUhvssDzNcdfi7a2MSh9mPhcTysm9YBBm5I096b1gEAeD0lEwDAYayy3zNbKNNNb5P8mXIGykXbOPTMUcr3xb63/LpP+d7ranrRIus4rFsH6MC8dYAe2LQOABWGtMXlpnUAAF7v29YBAAAmZJFyVelp4xxT8P3j7S5lgmUV2+6QnKQUTfM9f52bx6+xTim3dv1cDN9NyhafAIcyax2gwqbjzzfL0/0/y98Lt/ln/rv1F/7sPt6TAT5JyQQAcFjzlF9WFU2HcZLk5yTLlHJhGVfLTt15SvG47y0sb1KK5V87+DwM3xgexyFtvbUvY3gch8TFIbs5aR3ghV47+Xuc8ro0f/bPs+x2v88/8Wc/feLP3uepdNo83tY7fF2AQVMyAQAc1n3KwvM6u0848HJHKVMEb1IWBpaxGDBlb1MWhlZ7/jrXSX5IOTPsNW47zEJb69YBOuA9S+lxaEq91xvSVnkvfZznj7ezx1vLEm1bRn3/0Z/fptyfm5TXfd/DwCQomQAADq/LrbSod57k95St9JbZf9FAP13laSFon1Ypi30/v+K/3XSahNbuMpzJAmDYhjR5+LnydjuldJFPTxj10enjbbs96kPKz/vrlAtPNi1CAezbP1oHAACYqG3R9NotQtjdScqEySZlAYNpOUpZ8DnE1d5XSd694r9zBfS4bFoH6MC8dQBgdJ6/152lvGdukvyRcoHGUAqmTzlKmXb6OcmfKffrKsMqAQG+SskEANCOoqkfTlLOzVnHL/1Tc5JSNB3CIvVF06b7GDSkNAQOZd46QIVZ/losvc14pz5PUu7fH1E4ASOiZAIAaOsm5ZdLZ6+0d57yS/9VhnWWAbs5T3nMD2GRuuf6Zj8xaMR5PgB/9ybjLpY+53nhdJPkMn7+BAZKyQQA0N4m5YrT921j8OhtymOyaBuDA3qbwz3e87y8aFJKjIvHEzgU0zHDcpqypd4m5SzHWcMsANWUTAAA/XCfsvj838Y5KI5Szmtaxy/6U3GoLWu2z/W7F/y7tlcblzE8nhauYRhMxAzTUcpk158pP4POW4YBeCklEwBAv1wm+SHOaeqL85SF4UXjHOzfUcr5TIdYmLtPchHPc4bHwjUMw6x1AHZ2nuT3KJuAAVAyAQD0zyp1W2qxX9uppkMVELRzkrKYcwg3Kc/zzxVNCigAXmtq5xuN2fOyyTQp0EtKJgCAfrpJ+UXyP62D8P99n6fHhfE6TSl6D2F70Pfn/j8AqOWCmHE6T/JHys8oHmOgV5RMAAD9tkzyr5hq6ouTlF/wF41zsF9vcrjHeJWyRSYAdMHFMOP2Jskmn79IBeDglEwAAP33fKrJFlr98EsON+1CG7/kcAt1q5hanIJ16wAAjMJRkp9jwh7oCSUTAMBwLFN+kXzXOAfFm5RFY1uWjNc6hzs8fRnP7bGbtQ4ATMK8dQAO5jRlwn7ZOAcwcUomAIBh2aRs4/XvJO+bJiEp++Ovo2gaq6Mk1znc47uIomnMZq0DADBKP6VMNc0a5wAmSskEADBM65QrVZVN7Z3GdiVjdprDbo14GWewAfB6fh6Zpu3Po4vGOYAJUjIBAAzbOsqmPjhJeSws7IzT90muDvS17lOe0zcH+noAjIvp6uk6ytO5ob4PgINRMgEAjMM6T2XTb02TTNdRFE1j9jaHuzr4PmWiCQBqzVoHoLntuaGztjGAqVAyAQCMyzrJRZLv4myXFo7i6tEx+yUOVOf1xvC6YMIO+u+kdQB6wXbOwMEomQAAxmmTMnXxzyT/SXLXMszEnKaUfWNYUObvrmPBhtcZw/fNfesAwBf52YPntlP2i7YxgLFTMgEAjNt9kmXKdhk/xLlNh3KaMtHE+BylFE0W8gDomzGU2XRre07TonEOYMSUTAD8P/bu9riNI18f9n3+td/FE4GwEYiOQHAE0kYgOALTERiOYOUIDEWwUgQLRnCoCBaM4CEj2OdDc4o0zRfMYAY9M7iuKpRsCRj8AMxr39PdwOnYpAz19UPKUHq3NYs5AR+SfK5dBIN4G73VaE/jLwC1/BHnpcBAhEwAAKfnKuVuxkVK7yZD6Q3n55Q5spifd9FYQztzCCV3tQsAXrSsXQCj9nP0tAcGIGQCADhdNykXmoskP6b0bqJ/m5TvmPn5FI017O997QJ6sKtdAAAHce4C9E7IBABAcj8p8P8m+SV6N/XpTVzMz9mnmOeA182hFxMwfoblZB+CJqBXQiYAAB66SRkCbBFzN/XpfZJ17SIYjAm1ec0cGn6/1y4AeJVAm30JmoDeCJkAAHjO47mbLmsWMwMXMWzenP0Rc2HwvGXtAnpwU7sA4FWL2gUwKZ9ifkmgB0ImAABe08zdtEzy9yS/xXB6XRg2b/6+Zh49VujfHNYLIROM39vaBTA5P0dvbOBAQiYAANrYpQz7tkjyY8pweuzvfebRo4GnvUmZ32wOgQL9WtYuoAdXtQsAXmSoPLoy7C9wECETAABdbVMuSP83ZTg983XsZ1O7AAbVBE0a+2icp6wXU7erXQDwIjc4cIjPsQ4BHQmZAAA4VDOc3nnKcHq/J7mtWdDIvY27RedO0MRDy9oF9GRXuwAABuPcBehMyAQAdOEuN56zS3KRcoH6U5LLqtWM17p2AQzuXTTWUCxrF9ATw+XBuC1rF8DkNUETQCtCJgCgC42m7GOT0uChd9Nf6c10GgRNnCX5ULuIHtym9FoFYN7epQydB7A3IRMAp2JRuwBG5bp2ASdmF72bnrKqXQBHIWg6bR9rF9ATvZhg/Iw0QF9+znyOX8ARCJkAOBWL2gUwKrvaBZywTUrvph+SfKlaSX3vo0HoVLxL8rV2EVQxl0Y6IROMn5sZ6NMm1ilgT0ImAKALDeMc6iqlJ8//JvktpzuU3qp2ARzN+5QGG07HXIbKS4RMMAWL2gUwK2/iBhlgT0ImAPaxrV1AD4Qi/XpTuwBm4ybJOqVh5BTDplXtAjiqTxE0nZJV7QJ6JGSC8XtbuwBm533KkNcALxIyAXAqdPXvz6J2AczSqYZNbzKf4bTYj6DpdMypYU7IBOPmWoehrGP9Al4hZALgVOjJ1J9F7QJ6sKtdAM96GDadypxNy9oFcHSCpvn7mPn0KrisXQDwKtc6DOVNnLMArxAyAbCvqfcqeBN3YPVlDhexu9oF8KqblKGmfkxyXbeUwenJdJo+pfQOcWyaJ72YgGO6yuncnMPxfYibooAXCJkA2NccGhjmEI6MwaJ2AZyUbcq2+3vlOob0NrarU/UuZR0XNM3LMmUei7nY1i4AeFVzc85Pletgvj7XLgAYLyETAKdEyNSPOXyPu9oF0MpNSq+AnzL9XpXPWdYugGoETfOzrl1Az7a1CwD2tknyQ+bfC5zje5cSZAL8hZAJgH3tahfQg2XtAmZiDndn72oXQCeblO14jkHTsnYBVCVomo9l5nGcbHxPCfqB6bhKuSnsW+1CmJ11nKsAT/hb7QIAmIxd7QJ6MIceOLUtaxfAybtKWQ+3KXOtzYX9E03QtMo8hqg9VXMbTmhbuwCgk5uUOR8vkvyzci21Xe75vPPM69xyCG9T1ql15TqAkREyAbCvOdzF2sx7sqtbxqQtaxfQk23tAjjIHIOmd7ULYBSaoGkZQdMUXWR+2/LX2gUAB/mccjz5mvmcMz12nfIZr1Ku8x4+uljcPc4fPOa2bz/ERcp6NYf2AaAnQiYA9jWXxq6Pmd9dxsf0sXYBcOcq5SL3j9qF9Og889nX0t2blKDpYwTiU3KW+d3ZfRvrIMzBNiU0+ZrpD+fZ7JeuHvzZd9ixu3tsH/zdWcoNIB/v/nzb83tOyZuU72FTuQ5gRMzJBMC+drUL6ImQpLtF5nEX375DZjB+myRfahfRo0XtAhiNN0n+HRNsT8km8+sloBcTzMdNSjjyW+U6uvieUvcPKWHPx5RQf5vj9aa5SdknrlLO135MOQed4zyh+1jXLgAYFyETAPva1S6gJ+9jstKu5hLQGdphXi4ynwt88zLx2B/RkDMFH5N8qF3EALa1CwB6t07yj4z/3Ol7kl+S/D3l/GidcfX23uY+cPopZci+U/I2boQBHhAyAdDG99oF9GRVu4CJWtUuoCdjukD9GKHnoW5SgiaYq19jSJoxO8t8fx89mWCevqYEN2O7trtO6bHUBEufM/4bHW9SjgGLnF7YtKpdADAeQiYA2tjVLqAnq9oFTNCcJrwdS8j0Mcm/Mt/GyWPaZPx35O5DTyae8yll3yWUHp+vmd8weUnyLXr+wpztUs47fq9cR1KGsv4pJahZZ7rXnJvch01zOC99zfsY6hm4I2QCoI2xNM4f6l3KmOTsb049RXa1C0i5qN/c/feHGA6rD5vaBfRAgMBL3uW+UZBxWKc0ss3RpnYBwFFcpF4ocpkyt9Ey89rnbFLClzEEeEOb0zUicAAhEwBtbGsX0KNV7QImpJlgdy5qh6XnKdvSwzvff828vuMaNrULgCN4k/t5IKjrY8q+e45uY6g8OCWblKDnWMPnPQyXtkd6z2NrhnP+MfPu1eT6BUgiZAKgnV3tAnr0Kbr37+si8xkK6LLy+z8VMDU20UPhELXDQziWN0n+SJmrgjoe9kadIwETnJ6rlNDny4DvcZ35h0uPbVOuOWtfgwzlbQRNQIRMALSzy7wmM13XLmACzjKvYRBqBhFneXnujqaHgqCpu7lewMNTfo55mmo4y/M3C8yFABNO001KT9mfel7ubZLfUsKWbc/LnoKbDB/g1SRkAoRMALQ2p94Cn2JuptesM6+GtFrrb9Mo+faV571JuTteo3E3Jqnn1DTzNC3rlnEyTiFg+p55nesB7W2S/JB+bi68TLmBat3DsqZulf4DvDEQMgFCJgBa29YuoGfr2gWM2HnKnfJzsq3wnk2j5Ls9n//u7vmCpvY0jHKK3iT5d/Q+GVrbfflUWY+ApJxTnSf5dsAyfku5CWLXQz1zscn8gqY3cbMLnDwhEwBtbWsX0LP3mddwcH2aW0PTdepc5H5N+0ZJQRPQVjN83qJyHXN0KgHTbeY91xTQzk1KL5XfWr7uNmXupXXfBc3EJvMLmvRmghMnZAKgrauUC4c5WUej3GMXKQHcnGwrvOcm3b9HQVN75rPi1L1LOU67eaI/pxIwJfO7uQToxzolNNrnGvB7TnfupTY2SX6vXUSPlrULAOoSMgHQxbZ2AT1r5sGhOE/yz9pFDGB75PfbpMz7dYgmaBKe7Ecgx3NOab6uNyn78G3cQHGoUwqYEudCwPO2KceUyxee8y0lbDilY+4hLnLYcIRj8i7Ow+GkCZkA6GJbu4ABvI87eJNycfC1dhED2R7xvT7n8ICpIWja39x639GfTfqZwHxK3kevpkOc57QCpi8xbwrwspuUEOmpHjhfUoZMEzC1s8p8zk+WtQsA6hEyAdDFXEOIn1NO9E/Z1yRvaxcxgO85XuPZKmVd6tOblMbOVc/LnZM5hHBXtQuYsZuc5vajV1M3pxYwJeZOAfZ3keQfuR8+70tO8xjbh2beqzlY1i4AqEfIBEAXu5RG+zn6I/NorO5ik/n2BNke6X1WKevQEN7cLXs90PKnblW7gB64+3dY27SfvHwu3if5T8r+w3A2L1sl+b+Ufe6p0IsJaOtryjXTb5nHOVhNV5nH+cmydgFAPUImALra1i5gQNucXtC0SX/Du43R5gjvscpwAdNDv6Zc2Gso/rM53AUqZBreOvO9SWIfv6Y0Zs1he+nbWcqx4hj78bFZ1y4AmKRd7D/68jnTHzbvlHr/Ao8ImQDoalO7gAE1Q5OdStC0ybwDpusMPwzZeY7bMPkh5TOdyjr6mlXmMcyj4fKO42Puh/g5RW+T/CundZx7zXnK9jfnY+Fz9GICqO8m8wjslrULAOoQMgHQ1VWmf7fVS96kDJezqlzHkM5SesTMvVFt6DnEmrk7ju1tyjq6rvDeY3KW+XwHu9oFnIhd5r1v39f7lH3IJqc9X9M65XuYQ1Dd1m3ms/8EmLpNksvaRRxoUbsAoA4hEwCH2NQu4Aj+SBm+YG4WKcHIh7plHMVmwGU3AVPNuTua4a9OtUfCOvNpHN7VLuCEfE3pwUG50eA/Ob2waZmyzf1at4yqPsd+B2BMpn7duahdAFCHkAmAQ2xqF3AkP6cECYu6ZfRmlRJKnMK42UMOlXeW+gFT411Os1fTMmX7nIOp37k6RRc57fmZHjuVsGmREjL+O/MJqLu4zvQbMwHm5mumPVrIsnYBQB1CJgAOscvpNIy+TwkrLmoXcoBFyoXLHxlHMHIMQzWgjSlgeujXlO1yWbeMozjP8EMhHpP5mI7vJuZnekoTNn3NvPYli5QA7T85jV68r1mnbAMAjMuUbwBY1C4AqEPIBMChNrULOKI3Sf6ZEi4sq1bSTjNnzVVOr2FtM8Aym4BprD3B3qbcob/NfC/0xjBMYd+ETHXsYn6m53xI2ZfsUm6wOKtaTXeL3IdLc5+DcF+XOa3zN4Ap2dQu4ACn3EMYTpqQCYBDbXJ6d4G/z30j/rJqJS87y/3QeL9mXg3y+/iSYe7S3ma8AdND7zPPoa/mGDAl5TNRx9ckv9UuYsTeptxg8f+l7E8+Vq1mf6uU7Uq49Fer2gUA8KybJN9qF3GARe0CgOMTMgHQhyl36T/Ew7BpTI1ui5SeS7uUofFO9Y6yzUDLnELA9NCc5llZZZ4B03XK9ko960y7QedYPiX5V0oD2CbjOvYlpZ5NSn1/pByn+bPfYn8DMHZTHhJ6UbsA4PiETAD0YVO7gMre577R7XNKT4tja3otbVMChVPsufTQ9/TfM2STad8NP+V5Vs4y7/nEtrULIEnZh36vXcREvMl94PTflHX4Isc//i1SfrdNyjH4X3d1zXE/0YfvKYEqAOO2rV3AAaY6vC5wgL/VLgCAWdilDE025Qb4PrxJ8vPd4zalUXybMlxd3/OtnKUEBc1jar1rhtZ377pN5rN+f7h7XKd8T5uMe/L3VUqdc240nvLdqnNyk/n2lhva+/y519Bl7o99u/TTWHaeEiqdP3icak/drla1CwBgL7uUc/UpHufO49wWTo6QCYC+rDOfRvg+NHd5P/xOLlMuGB4+ktKw+TiEOsuf7whfPvhzkWlecBzLdfrtXXeRea7bzTwr/0wZJmyTcV0QrlL2K3Nf15tAmnG4StnP/l/lOqbucejUuLz786nj3kPnub8T+jxCvz78lv5veAFgONvM8xoEmCEhEwB92UVvptc81+hGv9Y9LmuVEsLMXdO7KSmBU9MLb3fkOhYpod4qp9OoLGAan6skP6UMz0i/Hh4DPzz7LPpmmDyA6dnVLgBgX+ZkAqBP69oFcPL67MW0ymk2Mn9I+dz/SWls36R8F0PNtbJMGQ7v6u49f87pBEyJkGmsNik9P2DqbpN8rF0EAK1taxfQ0bJ2AcDx6ckEQJ920ZuJutY9LWeZ0wyYHnt393hu2Mer3M/ntH1hOYu7R3I/5ON5zCV2HSHTmK1T1lXHNKZsFXfDA0zRrnYBAPsSMgHQt3U0yFHH9/TTi8lktS8z7GN/NrUL4FWruz8d15ii3+N4BjBVu9oFAOzLcHkA9G0XQwxRx0WPyzml4dqo53PtAtjLRUqIDVPyPf0dFwEA4FlCJgCG8DllDgA4lm/pb9zyi5RhYuB59gAAIABJREFUzGBIX3I/1CDjdpMyzKOgiam4jTkxAObANQkwCUImAIZwk/shhmBot+n3bu2bmCSd4a1rF0ArgiamogmYhNgA07erXQDAPoRMAAzla5LL2kVwEj6n/wuwqyS/9LxMaHyJRoMpEjQxBRcpxzAAADgKIRMAQ1rFsHkM63uG6xHyOSUMgL6taxdAZ4Imxuy3JJvaRQAAcFqETAAMaReNqQxrNfDyL6IxmX79Fr2Ypk7QxBh9iXMugLl5X7sAgH0ImQAY2uck32oXwSz9kuGHBGoak/XIow+3KftEpk/QxJh8ibkwAQCoRMgEwDGsopGefl3meI31gib6skpZn5gHQRNj8D2l1y0AAFQhZALgGG6SfKxdBLNxm+OvT1cV3pN5uUzytXYR9K4JmvTYpYbvKeuf8Bpgfpa1CwDYl5AJgGPZpsxFAodapk6D2jbJTxXel+m7jaGs5qy5keJL7UI4KQImgHk7q11AR7vaBQDHJ2QC4JjW0QjHYX7K8PMwvWQTQRPtreKC+xSskvxeuwhOgoAJYP7OaxfQ0a52AcDxCZkAOLaLmL+Cbr6khDy1bSJoYn9fYpi8U3IR+weGJWACOA1TDZmAEyRkAuDYmvkrrivXwbR8y7iGG9tEQzKv+54SOnBaNkl+TBkmEfokYAI4HcvaBXTkGAUnSMgEQA3N/BUa4NjH94wrYGpsImjiebcp+zkX2qdpm9I4pOcufbmMgAngVJwneVO7iI5qDm0OVCJkAqCWq5TGEkETLxn7XdubCJp42jLGpD91zXHuW+U6mL4vGfexEIB+LWsXANCGkAmAmgRNvGTsAVNjkxI0WY9p/BR3cVI0PXd/q10Ik/Ul4+zNC8BwVrULOMC2dgHA8QmZAKhN0MRTphIwNTaxHlP8lLI+wEPrmKeJ9n7KtBsaAWhvkeRd7SIA2hAyATAGgiYemlrA1GjWY3OwnC4BEy/ZpjQcXdYtgwm4TQklN5XrAOD4VrULOIBzHDhRQiYAxkLQRDLdgKlhDpbTJWBiHzcp+wjD5/Gc5ji4rVsGAJVc1C7gALvaBQB1CJkAGJOrlLu89QQ5TV+SnGe6AVPDHCynR8BEW+skPyS5rlwH4/IlJWAypxvQl7OUhv8pBxenZJXkTe0iDrCrXQBQh5AJgLFp7vLWE+S0/JZpDw3xlHWSf0TvvLkTMNHVVUqw/nvtQhiFX1KOg1O/0QIYl4skb5P8M8nXlNCJ8VrXLuBA29oFAHUImQAYIz1BTsdtShCzrlzHUL6mNCLrnTc/zbq7qVwH03aT0gD4Y/RqOlXfU3q1fa5dCDA7Z/lzD6YPKT1NPlaphtc0geCU7WoXANQhZAJgzNbRE2TOmnknvlauY2i7lKBJaDof1zmNdZfj2UavplP0ewyPBwznIn8deu1Nkn9Fr6axOcv0b7q7jpAJTpaQCYCxa3qCXNYuhF6dYsPaOuZgmYPLlH3SKa27HEfTq+mH6P04d9cpvdcuYng8YBiPezE9plfTuHzOtOdiSpwbw0kTMgEwBbuUQEJPkOm7zWk3rDVzsFiXp6kJR09x3eV4mv3ET9GTd45+T/l9t5XrAObtqV5MjzW9mrZJFgPXw/M+JvlUu4gebGsXANQjZAJgStZxh/eUfUm5gN3WLaO6m9yvy3roTUMz/9JLdwRD3zYp+0xD6M3DZcp+/1RvsgCO57VeTI+9T7nBYT1INbzkLPOZ33NbuwCgHiETAFPT3OH9S9zhPRXNsECraFh76CqlV4zeCuP2LaWh3/xL1NAMoff3lHWR6blN2c8vYygh4Dj26cX02Jskv8YQese2zfSHyUvKsc4xDk6YkAmAqfqc0vD7pXIdPO82ZVi4RdzZ9pJN9FYYo6b30scIR6lvl7Iu/hg9IKekOQZu6pYBnJC2vZgee5v7IfSWPdTD8zZJ3tUuoifb2gUAdQmZAJiym5TeMRrdxqcZGm9dt4zJeNhbQXBaX7P+6r3E2GxTGv0c98btS8r+fB0hNXBcXXoxPeV9kn+nnAstelgef7bJPOZhajhnhhMnZAJgDrbR6DYWTcPaKhrWutilfHd/j3W5hssY2pFp2MZxb4weHgN3VSsBTtGhvZie8iHJf3Lf857DbTKvgCnRkwlOnpAJgDnZRqNbLRrW+rVLWZf1bDqO69zPmbKtWgm0s419RW23cQwExqGvXkxP+RRhUx82mV/A9D2OfXDyhEwAzNE292GTidKHc5syj5CGteHsct+z6UvKd05/mnBpEXOmMG27lH3F/6bMA3Rds5gTcZ37OZdWcQwE6hqiF9NTmrBpG3M2tXGWeQZMiXNoIEImAOZtmzJR+t9TwhAN9P34nvuG+YtoWDuGXUoj5iLJL9GAfCjhEnN1kzIP0CLJP+JGiyFc5n7/sY6hNYFxGLIX01OaOZuuUs5Red4i5bp0jgFTYj4mIEImAE7DLuXC6yylYUijW3vNcEA/JDlPaZjXsHZ8N0k+p1ys/hjDY7X1LeV7W0S4xPx9zf2NFsLpwzS9lv6ecuf+pmYxAI8cqxfTU94l+SN/vsmBex9Tgrh3tQsZiKHygCRCJgBOzyblZP9/UxrdvletZtyaYOkfKRevq5SLJMZhm/vhsYSnz7tO2db/nrLtb6tWA8e3y304/UNKz16B0+uuU76rH3Lfa2lXrxyAZx27F9NT3iT5NfdD6a1qFjMCZyk3e/wr9X+bIX2uXQAwDv/z3//+t3YNwGk5Tznhmqqr6L0xR2cpjc8fU+5QnvOFwGuuUy6ItjH0wRQ9XJc/VK6lpmY93uQ0g9GzlOPtlDneDu885Zi3ynzvsG7re8rxb5PT3Hccw9SvBXYRNh6T49nrzlLWyTFev9ymnI81j1NxkXJjwhh/k779b5yvAREyAcBTlg8e72sWcgS3KQ1q25SLv13FWujXWe7X449J3tYs5gi+574RQ+MwtNME1Mu7x9z3F43mGNjcXLGrWAtAF+uUHkRjdwqB0yrl9ziVY+iX6LEG3BEyAcDrlneP87vHlC8cLlMa4K+iQe3ULPLndXnqPReaHgfNw12U0J9F5rW/aHzP/fGvORYCTNWYezG9pAmctnd/TvkcrrlJY51pXyN28UMcR4E7QiYAaK8ZuuM8pSGu+XNMFxaXKRdsTSPaLi4C+LNmPV7mfj0ea0PyZe7X4aaBGDiuZf587BtzT9/b/PX4t61YD8AQ1plGL6bXNDcONcHTFJyn9OJZZXohXx8uU84LAJIImQCgb4tHj+Sv8w+cp9vFyPf8+U6/7d2fTZj08O+gq2Z9Xd79//LB3w91EX2d0hDcrMvNn7vobQdj1oTVi0ePswwbWjchUvLnfcbDPwHmbKq9mPbxsLd6cz44Bk2wdArDUL/mp5T5CwGSCJkAAGjvqYnbX5rMffvE3+0ynkYDYDhNEPXYc/uMhzdOPLSLfQZA43OSn2sXcSRP9U49xg0Fy9z3+l9mnoFeF9e5v5kSIImQCQAAAACmYpHkP7WLGInLuz+b0OmpGxWeCqSWD/774c0Qy4xvGPSx0YsJ+AshEwAAAABMwybJp9pFcJL0YgKe9P9qFwAAAAAAvGoRARP1rGsXAIyTkAkAAAAAxm9duwBO1mUMkwc8w3B5AAAAADBui5iLiXp+TLKtXQQwTnoyAQAAAMC4rWsXwMn6FgET8AI9mQAAAABgvBbRi4k6bpOcJ9lVrgMYMT2ZAAAAAGC81rUL4GStI2ACXqEnEwAAAACM0yJ6MVHH95ReTAAv0pMJAAAAAMZpXbsATtJtklXtIoBp0JMJAAAAAMZnEb2YqOOXJJ9rFwFMg55MAAAAADA+69oFcJIuI2ACWtCTCQAAAADGZRG9mDi+25R176ZyHcCE6MkEAAAAAOOyrl0AJ+ljBExAS3oyAQAAAMB4LKIXE8dnHiagEz2ZAAAAAGA81rUL4OR8iYAJ6EhPJgAAAAAYh0X0YuK4vic5r10EMF16MgEAAADAOKxrF8BJ+Z5kWbsIYNqETAAAAAAwDnqUcCy3SVZJbirXAUyckAkAAAAAxuE8ye+1i2D2blN6MF1VrgOYAXMyAQAAAMC4LJN8TfKmch3Mj4AJ6JWeTAAAAAAwLtskiyTf6pbBzAiYgN4JmQAAAABgfG6SfEzyS0o4AIcQMAGDMFweAAAAAIzbIskmyfu6ZTBRAiZgMHoyAQAAAMC47VJCAr2aaOs6AiZgQHoyAQAAAMB0LKJXE/v5nhIw3VSuA5gxPZkAAAAAYDp2KcHBP6JXE8/7FgETcARCJgAAAACYnq8pvZp+r1wH4/N7ko8RMAFHYLg8AAAAAJi28ySfYwi9U3ebZJUSQAIchZ5MAAAAADBtVylDo/2U5LpuKVTSzL8kYAKOSk8mAAAAAJiPsyQXd483lWvhOH5P+b0Bjk7IBAAAAADzc5YyhN6n2oUwmNuUuZe2lesATpjh8gAAAABgfm5S5uf5e5IvdUthAF+SLCJgAirTkwkAAAAA5m+RZB09m6buOiU83NYtA6DQkwkAAAAA5m8XPZum7DbJb9F7CRgZPZkAAAAA4PQsklykBE9vqlbCa76k9ELb1S0D4K+ETAAAAABwus5SgqaLJG/rlsIjlynh0rZuGQDPEzIBAAAAAEnyMSVsel+7kBMnXAImQ8gEAAAAADy0SAmbPkbvpmP6luRzhEvAhAiZAAAAAIDnfLx7fKpdyEzdJvkacy4BEyVkAgAAAABec5b7wOlD5Vrm4HtKr6WvSW4q1wLQmZAJAAAAAGjjYeC0TPKmajXTcZ0SKm2SXNUtBaAfQiYAAAAA4BBN2GQOp78SLAGzJmQCAAAAAPqySAmcmscphk6XKcHSNoIlYOaETAAAAADAUBZJzlMCp/Mk72sWM5DLlECpeQCcDCETAAAAAHBM53ePRUr4tMh0ejxdpvROevgAOFlCJgAAAABgDM6TnKUET3nw53mSN0eq4TYlOLp59Gfz3wA8IGQCAAAAAKZi+cr/7+txaLTtuByAkyZkAgAAAAAAoLX/V7sAAAAAAAAApkfIBAAAAAAAQGt/q10AAFBVM6nuMmUy3ecm1L3M/YS32xivHObsLMnHJIuUfcM2yS7J15jsGgAAgAfMyQQAp2mZZJXkU8fX36Y0OG8icII5WSe5yNNh8+3dv38+Yj0AAACMmJAJAE7LIqWB+EOPy7xOaXje9LhM4Pg22S94/pISUgMAAHDihEzAMaxrF9DSunYBMJCPKY3IT/VQ6MPfU4bUArpbZP8AZ5f+wt2PSf7V4vn/SOnNyGlbD7z8ZpjWXRxfpmaVsj/bxyZ+XwCAyRIyAccwtR3N/9QuAAawSvLHgMu/TBmCDzjMMsm/93xun9vdLsnbFs//njKHG6ftmOd41ynDs36NgHMKtkne7/ncH2PoXQCAyfp/tQsAAAa3yrABU2KOFpiyRdoFTEnyLslZ/6XAs96mDOf4r5QeTutYBwEAoDohEwDM23mGD5iu465ymLJFx9fpyUQtb5L8mtID72PdUgAA4LQJmQBg3o7Rw0gvJgBqeJPSs2lTuQ4AADhZQiYAmK9l9p8PoavbaNyDqbvp+Lpdn0XAAT7FsQgAAKoQMgHAfF0c+PrbJJdJvr/wnK/p3kANjMNVyrCXbVxHyMS4CJoAAKACIRMAzNNZkg8dXneZ5Kck/3u3jGXKvCv/k+SHJL/kz6HT+pAigdHYtHz+eoAa4FCfcvgNFgAAQAtCJgCYp2WH1/xy97pNnu6ddJUy/9J57gOnXZfigNFZ5+Veiw99ix4jjNc/kyxqFwEAAKdCyAQA83Te8vm/pQRI+2oCJ2A+likB0kt+T7IavBI4zKZ2AQAAcCr+VrsAAGAQyxbPvY6hr4DSg/FjSki9yp/D6quUhvuro1cF7b1POQ5u65YBAADzJ2QCjuHywNe/b/Hc22gAg7a+1i4AGJWrmNeG/n1Jux5Gy5Sw823H97uIkAkAAAYnZAKOYXng6//b4rlXPbwfnJpt7QIAmL1d2h1vtim9bD+mhFNvWr7fh5S5mXYtXwcAALRgTiYAmKc2czLdDFYFABzma0pY9L3Da5e9VgIAAPyFnkwAx7FIaehY3v33QzcpPbC+pr+h/s5SQobm/R6/5+7ucZVyp/BUQ4bmM57nr58xKZ+v+Yy7I9V0lnLX9fKupueGe7zO/V3dze/fp7Z3fB/bIuV3ax5nzzxvl/vvaTt4Vd0tcj+XzeLRvw2xjT9nmftt4vF32mcdZw/e57nfb5f77W8Mw5g+rHmR5/eL24x7XTsli+y3n7hKWb+3mcZvt8zz22lyv81sM93jc99uUobO26bd8W2ZdkP0vaQ552j2JY9tc78P2fX0nsd0nvvj2OP1cpf748fuqFWNwzLT2WaXua9z+cS/7/Ln64AxHJ+fs8jL51bbdD/HaL6fZe6PMU/tW5qh2Jvfd5v6vzEAjM7//Pe/bUahAqiizY7qMv3ftfo5+/cKefzey5Q5AT7s+frfUoaG6eIspQFmleRdy9d+S/mc2yf+rVnmPpZ7PKfN8i7y1wvH5nNepN08Dd9TPuOmxWvaWKbdb/3YbUrjzTr7N+Ccp3ymp7SZy+x72l8wP/XbvGaR0liwSvt1tPEt5Xv6mv4u8vfdxp+ap2aZ8pvt+30/tY2vsv82sclf1+Gzu7pW2X+buE753M+tP89ZpfyGbdfz25S6P+e4DZSH7Beb+WO2T/zbIceFxlPLTUrN+9badR7CTV7eF25bLGvZ4f1fssj9enbofmLTS0XFob/5IvdDv7UJSV5aD8egzTnaIec4jXWSX1s8/3va9ex9bJn79bHN73ad+33eU8eq7Z7L2WS/9fiQ5a1Svtd9jx8/5H6/89J28Vyj/VO6nIckL+9/am2zL51TD6G5uanLsTm5P//cpN+aj3lu9WP2r31xt+xPez7/KWPfLwPA0QmZgCmoHTJts/9Fzv88+O/PSX5u+V4/pX2jWNPAfJHDe69cplx4bR/83Tr7N+j8z+tPabW8xxeNF3evP+RzXt8t5+sBy3joLOU36xouPeVL9gublkn+3eP7tnHsC/rHbnMfkhwaNm2z3zb+eP/SZRt/6ntbZ/9t4nEj7aHbxHXuewe8ZJV2jZAv+f1uWUPeCXx29x5tf5+nXOavoeo23Y4LD9U8CX+tsb9Nbfvs9/exyDz2E8mfv5Ozu/c/9HNdpmyHuwOX07djh0yLJP9p+Zou6+gy7Rq5n9Osg+tHf7/v97bvd9ZleYuU85e2n/Hh97nt8Po+vfTbbtN9m13n8OPHU8eOPvV5/t+4Tvnsmx6WtU37c6uu59T7nJP2tS9+aKz7ZQA4OnMyAfTvLOVCp8vF6a7l8z/evebX9HOB+T4ltGjbu2FoZymh0D9z+Od8m+RfKRexTw150sZ5yvffZ8CUlAvgq+zfu2XM1ikNgn1e1CdlPfg15fv/2POyX3OW8vv0EWAcUsMmh28Tb1O2+dUL77NN8kf6CZiS8r1d5bDeBS9ZpawXff0+75P8Xw5vHOdpTcPfkPuJqxx/P5HcHyP6+FzvM5/jwiF2KQ3hQ2nON/6dfsKTh+vgUPu8Ls5TaqoZEI1R8730cfxojh2rHpb12EX6Pf9vvE053m9z/PW1Od/ock792k0Eze/a9zHmfcqxa93zcgFgcoRMAP3b5DgX7Z9TwpIh5t5pGoEPDWH6cMhF50s+3S2362c8T/u5Idp4k3Khvxlo+UNrLujbDGvUxZv0Fxru62u6D+PVR++dZpvos7Hkj/y1IaxpIB9if/Y25TP02fDfBG9/ZJjt8teU334M+8W56LNB9yUPby44liGOEc1xYWw3ghzbruXz920sH+rGkaQcM7YZR0jYHEO6rJtDBny1NdtsXzdUNPo8l2t+uz5uunrJ+xx3fW0+V9dzq5d6iw31uz7k/ACAkydkAujXOoc1TuwzpEZzl+3QjXJNg0jtC6Ztul90vqbrZ1xk2IDpoU+ZXtC0zLC/21MODQ33tc5hoUsfw+Z8zjDf7R+5H7Jm6BA1uQ8I+7hbeojg7SkfMo794hysMnzD32NNL9Ghf7+ht5+f4875Nvb5vVcpvU6G3uc9Fegf29d0/5y7HusYk0WG3Wb7OJdr9ivH6n12zJud1hnmvOaQQLUt5wcAnDQhE0C/Du21sU8vh68Z5i7bp7xL3SHB1hk+qHiX9hfQmxzngrVxnulctK5Shhk65vfTGDoYXWT4nlmv+Zhhg5RNjhui5u69Fge8/tA7oNt6d8T3mqtVhutx9ppj3ECxyfCf7dfUGQJwDNr+dq+F+6uU9fFYjvlej61iiLynbDL8Nvsp3QPGJmCqcewZ+man8xx2rfFS77pNjnucWRzxvQBgVIRMANOyyWk1Dhzrs37I/o11qxz3N7i9e88+hlkb2nnqNp4lwzYgH9rjoo9hhoZuYHqb0iB7zEaZNzmsAeuQ4Qs5vlXmvZ9oln8Mm0znBoS+nKX99/vS8XMMx61jOvQ41kdv3DE61nnd57QPIpoRDGqE8o1PKfNADeHQz7V75u+XOd5NeY2Pmcb5OgD0TsgEMB6Xr/z7RYYfCuqU7TvHxWrIIp5wkWk06ixSGm3HoGlAHptd7QL2VKMh6326bVufc1rB+9SdZzzzCb1LabidsjcZruF3rNr23rp94d+aXpDsTwP6Yd6k/VCX2xx3WNHn/DP3Q+pOwerI7/db7E8AOGFCJoBpOE+5uGM4b/P6BelZ2jdof0nyY5L/uXv8/e7/f8/rPVu+ZDrzMdW+y/axdxlPYzb7Wbd8/jJ1h/OknTHcjf/Y+0x/bqOLnE5vprO0/71eukljk3Gtj5yGT9m/N9M63XtG3qbcwPbbg8fvSb53XF4yzt6Tz23jbQPpL0n+kfvz9f9NOV//La+fr3/L9I8lAHCQv9UuAOBEXeavYcVLd4ce2lh+nXJ33e7R35+nNNROsZHlMn+9Y3CZw3o1rPJyqHPecnk/PbG83d1jm9I4+DHl9318l+r3vB563eT5HnBtvofvaX938sPnr3P48FCXuf9ukvJbLnLY3bs/pzRqbw9YRhe3KZ/j8XcyZI+025TP+fA9zlLWr6HugP6ev/YEOU/34Wnepvzu2z2fv+n4Po3a+8Xntt02w4Hdptt6tevwmkOtc/i6OMR+4teU9fgYPUaf206X6b4PfZOynW8OqGsqnjpWvmb7zN9/zOFDaT11HnLo7zkWTaP64+97++j/X9puhj4POYYhttnk/tzvJYt0mwfyMmV/sHnhOWcp56AXaXese3v3mnWHug713LnVU+vNedp9rqfO129Sfvttyudd3v35eL2+zvF7TQHA6AiZAIZ3m3Lh8lxj9/LusXvm9ct0D04uUy6Innrfhz6mXDROYdip31K+z90z/97c6dylh8P7u9c/19CxaLGsfXshfb17rHPfmHCb/e7AvMrzQ5f8d4/XNy7SPYhZpPtwTdcpn/trXv7OV2nfENJYZ/jhXQ7dxg9974s8v65d3L33Jv2FTV9SvtfdM/9+yDb4Mfuti6t0/zxfUhr3XgsVVinf31CNxcsX/v7fey7jpX3AmCzSvdfZvvuJiwPe43OG/R6bz7B54TnLPN2AuY+5h0xnKb9RlyGDnxsSsevNO7e5/y1fCkUWOezYdWzXKd/JNn/dNzahyjJ//cwvHf+PdR4yhNeOrcn98J9dttlVXl8H1x2W+8sey03K77i+e+4m7QLXi7vXDR0KNudWmzy9TjY3hOyeeG2b3lbfs9/+c3v3fk3I1mzX5mECgBguD2Bo33Lf+LV95jnbvNz4tO7wvrcpQz4sX3jfh77ePfeXDu91LLdJfsjLjdtJudC7SBni4qW5GJ6zfOHfFi2Ws2v5vuvc17zq8Ppa1unWgPZbyve5ycsX57u79zjP6/OWPeV92g+Z0kYf23hX33P/Hb5km/L9HTJETnK/X1llv23wpw7vse9vte6w7NuUbWyV/XqtbFK+t986vBd/tu74ul+y/37iImU40q77iWWH1+3jMmU92rzyvO1dDV86vMexJ7c/lkXK77pLt4DpOk9v66t0C6mb/f0+Dey73B+7Dt33Dq3Zzp4L329SzhMvnvn3udn32NqE/F222dduXlik3TrfHN/ahqc3KcfdNp+h6T05pN9zv/0/t05u08+51XNB9HOamxJuU85zTmGbAIBXCZkAhvMlh9/ddp72d0jeplz8tL1oSsqF0w/pFs4MqflMbS7ktunWw+a8w2uesujwmu3d67r8djWcpX3DX9MQsm75ul26N+Z07Wn1mj628a6+5+m7yp9zc/f81+YVeMkq7dbNTdoH12/z+h3Iy7RvIL5Ou6H4HlqnW2BGsUi3/cQPad9gusu49hOXabedJmU7+9bhvfo6dg1plfvhp1577JL8J2U+yq49gTbP/H2XBvKu+/tdyjrQ5Tc9hi7BxJy1PbYmZb3uss9ZvvBv65bLOrQn2CrtwtChzquScry9yPHOrbrsD66y380DAHAyhEwAw/iWfsbn7rKMZQ67q+4qw9+h2NYq3T7TJu0bdl5qqNu2WM6ndPv9pjTkxqrDa/YdDu2l92zbmPM+3UK/l/S1jXe1Srd5tFYd3+/3dA+u2wZbrzWWr1ourxl+8pD94iaCpq7aHk+63FTw2Crt9xMf0u+E9vsOe/qUVdrf7NFn7UN5m7I/3udx6PCet3k6PDlL+55fX3LY/r7Z946tR9MvGdcQdbU122yX87CLtN9mFy/8W5t9x7f0E3a0ec93GWaf83uOH9y8S7fte9dvGQAwbUImgP4147j3Ydny+b+kn2EbthnPEFGXOaxnz7rl81+6aN61XNYfKY1ci5avm4q2Dai/pZ8GrVXaN9b1GZw2QxrW8iXdt/Nt2oc+zRwkXR3y2qe0/S1X6We/uElpAKOdVcvnr9PP73WR9ut6n/uJQ+YsuUn73iXLju81V8/1hGj7G1+nn3O6ZliysfQUv4weTI99TvfgoMs2u3jm75dp13uvr2uOXdpvpEe/AAAYwUlEQVSF88ue3rfRzF3Xh23L5/+Rcq2x6On9AeDkCJkA+vc1/dzddpZ2E843kzb3ZZ3Dhtbqy+bA11+lv7uHd2n/nfycMuTP19QNJobQZijHPhsPkvbfZZ+Nx5vU7XF26HCKmw7vd8jnbVvv8oV/O0+7xrdDQ+rH1hlPI/EUtD2O9dnw3aXnXl/7ied60bQxlWFTx+ilnh3Llstapb/9/S79h+5drWsXMEKHbrObPopIu3X0W/rtUdNmv9P3EJ2HBPNPaXvu/yHlfH2bst1PoXcoAIyGkAmgf301kLW9eFv39L5DL7OtPhratj0so7Hp+LoPKXdKNne7TmH+jJcsWz5/3fP7X6XdHbdt5zZ7Se27vw/dJrYDP/+xm/QX9C5aPr/v36rL3eqnbNny+X1/t9uU4Gpffe2Xtzm8sfQqAs0uvuflcHHRYlnX6X84uc+p/7sO8bmm7jKHb7O79HNzVpv90KaH93uozfnFsuf33vS8vK7Hk/cp5+u7lJqW/ZQDAPMmZALo13X6GeYnad/YNcRdz7XvpP6efu5q7Os3SQ5vIHqT0rvp/1LqWmWad0u2WT9vM8wY+23Xz0UP73mduuPwt2kwf85u4Oc/pa+7k9uud0PswzYDLHOu2vxe16n/ex06D1Cjr2NOn8euU9AMZfrS/qbNDQdDBcqbgZa7r9rndmO07Wk5ux6WsWjx3H8l+W/Pjxr6CPke2+Sw0O9Nyvyq/075XS8yzfN1ADgKIRNAv/psEGpzITPExVnultlHo/Yh79+HXU/LSUpNfY1//y73d0tObe6mNuvnUA2lNUKmbQ/LqG3X8vnbAWroqs16tx2ohl3665k1d4sWz90OVEOfwzXua9vDMhITy7fxPSXU7PN4M5ZjV9+El3+162k52x6W0WaI0ZoWPS5rqHVy1dNy3ib5Z5L/LyW8WvS0XACYDSETQL9qXbgP+b7bAZc95vd+ySbthmp7TdO76T93y57CnZKLFs/dDlRDcvzG/t2R348/a9MzZsj9okba/SxaPHc3UA03Gcf8gl3sahcwEb+nhIO7V57Xtof4tkMt+6i9/9hVfv8x2tUuYIL66vmZDPf9b5P81PMyP+V+rtVFz8sGgMkSMgGMV5vGkCF6MfGyVUrDVt8+pVxs9zUB/VAWtQu402bdX/bwfrselsFx7Ca67FM1ZMP7bsBlU8+3JD+k9C7e51gwlhs4ap+z1Q654LEh18lN+g+akjLX6lX6G90AACZNyATQr1rD5VHHRZIf0/9d8m9Sxtkfaj4IutvVLoC97WoXQCu1G96Zhu9Jfkny95SbMQQm7dnWODWblEB6iPP1f6b+PGsAUN3fahcAMDN9Xrhv026CaurYpvQ6u7h7vOlx2T/f/ekuyX5oWDsty4x3yE3+alG7AAZ3nfbh71XKvnv74L+B+mrO2drFVcpxZpVknX6H+/t09+eqx2UCwKQImQDmYTHgsvWoet1NygXrOuUC8yL9Tdz8c0rjWu2Jwh+7yv4h6JDr0KLFc93xPn1jaWBuO7cLr1sMuGw3bIzDJuU4WUvbY8BZhtnnLAZYJrCfzd1jdffo6/jwKWUfYxQCAE6S4fIA5mHIBs/lgMueo03K7/FDki9JbntY5ueML+w79lxIT1mk3ztRGb82jcTLoYqIkGlf2xbPXQ5Uw6Ll88cSZNK/tr/tUNv5cqDlMg99nDcew9T3lZuUbfHvKXOs9jGU3jrjO18HgKPQkwlgvNo0pr5LaUjb9VzDIv31yDk1V7kfNuPj3X9/6List3fL2BxaVI92LZ471Pq5bPl8PZmmr02j1vsM0xPhPMLNfY3h9/rY8vn2E/N2nf23348ZZsjN5QDLZD7a9BT/LfWGhd1Vet++7XI/5PXHu8enl17wgjd3y1n3URgATImQCWC8di2fv0r/FzWrnpd3qr7ePRa5H56jbSP1KuMKmdo2xK7S//rZZnnXmf5dt7Rf74YIZ82Rtr+p/V7fe35vxmeX/Y+/q5TjTJ/HjkW6N2BzGnbZP2RaxNyDfWrO1y9yP/x1l/P1dZ9FAcAUGC4PYLyu0m7IjIv0O0TDWTSm9m2XcuG5SLn7tI2xzSlSe/1cpd2Fv94J87Bt+fx1+l3vFhlXA/GidgGv2LZ8ft9Dg7ZtILSfmL9ti+c2vRL6tO55eWPWx/Bjp2jb4rkfY3i2IdykHI8WSX5p+dq3Gf+xGQB6J2QCGLdti+e+Sb93gG/ulsnTVjlsvoZ12gdNY5sHZtviuX2un2dpP7Hy157em/ouWzz3bfpt1B3bejSFYfu+tXjum/Q3afp52v/2Y/t96V/b3/gi/R17lxlXSD20XYvnju38pqZti+cOEYTOzXnaD5v60OckP7V8zeKA9wOASRIyAYxb28aQD+nnYnOd7vMHnYLzlIvObQ4PmtoY292qm5bP/5DDG/zPUr73tgGoxuP5aPtb/px+hv7cZJxz1B3SeHYMbX+vTzn89zpL+xslbmM/cQqu0q6HTXODxKHH3/NYv14iZLq3S7uhO3/NsN/fYsBlD22Rcs64yWHf0SZ65gHAi4RMAOP2Ne2GJEuSf+awoOki5YKVpz0MOd7c/ffygOVN+aL1a9rX/2u6B03Nd9+2of9LzMc0J10aav/IYcHFJsfrgbBt+fwphExtj2N/pPtxbJFu+wkBwOlo+1u/S1mnugZN5+l2c8Qp+ZTx3UhTU5fe2n1/f02v8f/ksPPcWs5SvpfmfP3/cth5wO7wkgBgvoRMAON2k25DjP0z7S84m4uxf3Z4v1PxVC+aN0n+nW7BySLthrsaY1Cy6fCaX1O+x0WL13xMucDv0pNk3eE1jNcuJThs64+0n/NnkbKuHnuIqzahzKfsHzQt0++wqvto5rZoqzmOLVq8ZpXSU8V+gpd0WR/fpex7li1ft8rpBkzbls/f7Pm8RQ7vmTJ2bcP5tyn7vj6+k0XK/nCX0hM4Of5xow9f89djQZfzgNw9f2xzowLAqAiZAMbvc9rfBZ6Uocl2d69/6aKzGfptF0PkvWaT5xsvf035Dld7LqsJ9doY46T0n9OtN9b7lLtjN3l+4upF7huN/5VujXRf4u7TOVp3fN3PKevDOi+HF+cp6+Z/Uqdhqe22/q+Unj/PbUcXKZ/73ymh1LEbZw85jj3cTzxlkfvP90e67Sd+j/3EKdmlW1Dd3FSyzcvB7lnuj11d18k5aLsf+5CXg+WPud8vf8q85yLqEs6/Temt8znth7hr1tmvKd/vr/nzevs20/q+N3n+2P1zyrq52nNZzfCrbexaPh8AJu9vtQsA4FW7lAvGLkPYvUm5mPo5pYHv8QX/eU638aOtz3k9hHub0qC0TrlQ/5q/3sl7ltJQsk67Xkxtxuc/ppuUhod/dXz9p9z3Enm4jvbRsH+baTWKsL9dSiNxlx5Gb1L2p79mvPvFbdpvA/+8e1w++LtFnt7PrHLcbeMmZZ/Xtafs0PuJdQ/LYVrWKcfiLtv6+9yve9/z517GZxnn3G01dLkx5sPd4/H3+tS2PvahQg+1TtlXtzlXTO7P+7+lHEuuUo6Zu7t/P0s5zjV/LrPfvnSdEraMsVf9Q6u8fm4w5Pn6dYRMAJwgIRPANKxTLnQOabh4E0M9dLXK/ZAh+3ib+4v85P6Cc5H2jQWNTcfXHcPXdG/wf6jvdXSV8TeG0N1FujcSN8a6X/ya7nPj7fN5Vjl+APs5pTHz0B6z9hP0YZfDgs+GQOl5u5SwqMt3tM9r3qRsv5sOy5+KVUrvuS6awK4vb1K2mTHfvLNMCY/29fh8vbmJYZHu5+vbjq8DgEkzXB7AdKzSbbghDnfoBfXblEbRrhestxl/I8pFxtXb6kvaD0fItNxkvneyX6XbMJT7epM6390q49pP/Bb7iVP2OaW3B8PZDLz8uR4DGtuU/dRY/Jz2Q/Ed06Hn681NDF3P1xM9YwE4UUImgOm4yrjvHpyzVeoGfJ8z/jvtb1LuIB2yYXxfX7L/WPtM2zbJT7WLGMh64OWvBl7+U25Sf3/a+BKNgYwv+JybTYbd3j9k3KFHH9bpNofYUNrOFXVMq9Tdns3vB8DJEjIBTMsm821QHbOrlAClRsPo90ynIbTpWVLzAl/AdHo2GVcDXF82GXZbqtU4W3N/2rCfoNHcIHHM49YYQtZjaeZjG9LcezMlZX81luPcMmW+ojFqzkNr3PA0pfN1AOidkAlgejY5XtD0PeWuPO4bRo954fr97j2npPmeagRNGo5P1yrHG1LoS5LLI73XauDl12qcvUqZcL7GfuL32E/wZ8cMmm5zeuvf5wy7zzyVXv6r1A+avqXsu8fcu36X4x9fmu16zN8LAAxKyAQwTZskP2bYu2G/ZPwXksfWNIweYw6HJmCa4vd/k/I9HSugvE3yj5xewx1/tk5ZD4bcLx47oLjKsDcV1Gyc3aXs4469nziVBmnaaYKmIY/vt3fvcYrzgA3Zy/ltyjnHKVilHBOO3RvuOmX/+THTGA6u2Z6PEco15+tXR3gvABgtIRPAdG1Thjrq+wLqNuUCdtXzcueiGYpjyIv83zPdgOmhi5QwdMg7mL+kbAen2GjHX33NMEFwzYBik2HCs++pv5+/yf1+YsheovYT7KM5vg+xvX1LWQdPtSG6afTv+3zgNqUX6yl9r5uU49wxApTrlPPdRaa3/2zmAPxHhju+fIuACQCSCJkApq65gPoxhzeq3ua+IW5z4LJOwSblu/ot/V28Xqb8lheZfsDU2KZcgP8j/TYufUny9xiehL/apTQU9xFwNg2Yi9RtYGvCsz4aFS9TGg3PU7bPMdimfMc/pb/eDs0xzX6Ctr6mv+N7c1z/GOtgEzT9ksNDvIf75vWBy5qiXcp+7e8p+7k+Q9Fm3/lj5nFN0GzPP6X/83XbNQDc+VvtAgD20Gaejd0A77/J/g1xQ7z/Pra5b6T7ePd4v+drv6VcgH3N0xdK20OLO2B5fb33LvuvR7sWy20mtF6nfOfLu8e7Fsv4nvLdb1q+92tqbzePNevYIu3X0aQ0emzz8rra1SZ1t/F937vP9z/W/EWNTfb/nPs+b5/lLNN+ndtnXdvk+AHNLqVRcZ0SRH9MGSZqH5e5/zy7PZ5/7PWjscn9XfrNPvWU9xP7vl/b5/apzbqyHaqIATw+vjfr4z7b3HXuj+vP9XDY93vb7vm8WttsF59Tvpvme/2w5+u+p3yfzfb9mk3mv83uct8jtVlHz9Nuv3md8r02321fvXI2Gdf10yb3x5dVup2vb/Pydg0AJ+t//vvf/9auAYDhLO4eZ7kfr35397iJi6QhLfPn7/2h7aM/T9l57r+ns0f/tnv0gD4069ri7pFMd7/4cB+zfPD327s/d5nHtmM/wVg83OYero/buz+vomdDFy/tlxPnS108dw7amNrxbijLR38+1GzP2yPVAgCTJWQCAAAAAACgNXMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAAAAAAAAWhMyAQAAAAAA0JqQCQAAAAAAgNaETAAAAAAAALQmZAIAAAAAAKA1IRMAAAAAAACtCZkAAAAAAABoTcgEAAAAAABAa0ImAADg/2/PjgUAAAAABvlbj2F/aQQAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsEkmAAAAAAAANskEAAAAAADAJpkAAAAAAADYJBMAAAAAAACbZAIAAAAAAGCTTAAAAAAAAGySCQAAAAAAgE0yAQAAAAAAsAVHrwoJUYaV1QAAAABJRU5ErkJggg==" alt="Fusion5 | Transformation Partners">
+      </div>
+      <div class="header-badge">Go Beyond</div>
+    </div>
+    <div class="header-title">
+      <h1>Alspec D365 F&amp;SCM — <span>Business Process</span> Gap Map</h1>
+      <p>Aluminium Specialties Group &nbsp;·&nbsp; Microsoft Dynamics 365 Finance &amp; Supply Chain Management &nbsp;·&nbsp; April 2026</p>
+    </div>
+    <div class="header-meta">
+      <div class="meta-card"><div class="num">23</div><div class="lbl">FDD Sections</div></div>
+      <div class="meta-card"><div class="num">103</div><div class="lbl">Gaps Addressed</div></div>
+      <div class="meta-card"><div class="num">3</div><div class="lbl">Delivery Phases</div></div>
+      <div class="meta-card"><div class="num">8</div><div class="lbl">D365 Modules</div></div>
+      <div class="meta-card"><div class="num">29</div><div class="lbl">Change Requests</div></div>
+      <div class="meta-card"><div class="num">8</div><div class="lbl">Work Orders</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <span class="filter-label">Phase</span>
+  <button class="filter-btn active" data-phase="all" onclick="filterPhase('all')">All Phases</button>
+  <button class="filter-btn" data-phase="impl" onclick="filterPhase('impl')">Implementation</button>
+  <button class="filter-btn" data-phase="cr" onclick="filterPhase('cr')">CR Addendum</button>
+  <button class="filter-btn" data-phase="pgl" onclick="filterPhase('pgl')">Post Go-Live</button>
+  <div class="sep"></div>
+  <span class="filter-label">Gap Type</span>
+  <button class="filter-btn" data-gtype="Extension" onclick="filterType('Extension')">Extension</button>
+  <button class="filter-btn" data-gtype="Customisation" onclick="filterType('Customisation')">Customisation</button>
+  <button class="filter-btn" data-gtype="Configuration" onclick="filterType('Configuration')">Configuration</button>
+  <button class="filter-btn" data-gtype="Integration" onclick="filterType('Integration')">Integration</button>
+  <button class="filter-btn" data-gtype="Reporting" onclick="filterType('Reporting')">Reporting</button>
+  <button class="filter-btn" data-gtype="Security" onclick="filterType('Security')">Security</button>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <span class="legend-label">Gap Types</span>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--ext-bg);border-color:var(--ext-border)"></div>Extension</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--cust-bg);border-color:var(--cust-border)"></div>Customisation</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--config-bg);border-color:var(--config-border)"></div>Configuration</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--int-bg);border-color:var(--int-border)"></div>Integration</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--rep-bg);border-color:var(--rep-border)"></div>Reporting</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--sec-bg);border-color:var(--sec-border)"></div>Security</div>
+  <div class="sep"></div>
+  <span class="legend-label">Delivery Phase</span>
+  <div class="legend-phase"><div class="legend-phase-dot" style="background:var(--phase-impl)"></div>Implementation</div>
+  <div class="legend-phase"><div class="legend-phase-dot" style="background:var(--phase-cr)"></div>CR Addendum</div>
+  <div class="legend-phase"><div class="legend-phase-dot" style="background:var(--phase-pgl)"></div>Post Go-Live</div>
+  <div class="sep"></div>
+  <span style="font-size:0.7rem;color:var(--text-mid);font-style:italic">Click any card to view gap details</span>
+</div>
+
+<!-- SWIMLANES -->
+<div class="swimlanes">
+
+  <div class="swimlane lane-otc" id="lane-otc">
+    <div class="lane-header" onclick="toggleLane('lane-otc')">
+      <div class="lane-title">🛒 Order to Cash &amp; Sales</div>
+      <div style="display:flex;gap:16px;align-items:center"><div class="lane-meta">4 FDDs · 26 gaps</div><div class="lane-toggle">▼</div></div>
+    </div>
+    <div class="lane-body">
+      <div class="fdd-card" data-phase="impl" data-types="Extension,Customisation" onclick="openPanel('fdd01')">
+        <div class="card-phase impl">Implementation</div>
+        <div class="card-ref">FDD-01</div>
+        <div class="card-title">Sales Order Management</div>
+        <div class="card-subtitle">Order to Cash · D365 Sales &amp; Marketing</div>
+        <div class="gap-summary"><div class="gap-total">11</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge ext">Extension ×7</span><span class="badge cust">Customisation ×2</span><span class="badge config">Config ×2</span></div>
+      </div>
+      <div class="fdd-card" data-phase="impl" data-types="Extension,Customisation" onclick="openPanel('fdd02')">
+        <div class="card-phase impl">Implementation</div>
+        <div class="card-ref">FDD-02</div>
+        <div class="card-title">Sales Pricing &amp; Trade Agreements</div>
+        <div class="card-subtitle">Sales Pricing · D365 Sales &amp; Marketing</div>
+        <div class="gap-summary"><div class="gap-total">7</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge ext">Extension ×3</span><span class="badge cust">Customisation ×3</span><span class="badge rep">Reporting ×1</span></div>
+      </div>
+      <div class="fdd-card" data-phase="cr" data-types="Customisation,Extension" onclick="openPanel('fdd13')">
+        <div class="card-phase cr">CR Addendum</div>
+        <div class="card-ref">FDD-13</div>
+        <div class="card-title">Custom Colour &amp; Finish Workflow</div>
+        <div class="card-subtitle">Sales Quotation · CR002, CR0018, CR0020</div>
+        <div class="gap-summary"><div class="gap-total">3</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge cust">Customisation ×2</span><span class="badge ext">Extension ×1</span></div>
+      </div>
+      <div class="fdd-card" data-phase="pgl" data-types="Integration" onclick="openPanel('fdd18')">
+        <div class="card-phase pgl">Post Go-Live</div>
+        <div class="card-ref">FDD-18</div>
+        <div class="card-title">Customer Portal Quote Integration API</div>
+        <div class="card-subtitle">WO 50717 · Sept 2025 · D365 Sales / OData</div>
+        <div class="gap-summary"><div class="gap-total">5</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge int">Integration ×4</span><span class="badge ext">Extension ×1</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swimlane lane-log" id="lane-log">
+    <div class="lane-header" onclick="toggleLane('lane-log')">
+      <div class="lane-title">🚚 Outbound Logistics &amp; Transport</div>
+      <div style="display:flex;gap:16px;align-items:center"><div class="lane-meta">2 FDDs · 18 gaps</div><div class="lane-toggle">▼</div></div>
+    </div>
+    <div class="lane-body">
+      <div class="fdd-card" data-phase="impl" data-types="Integration,Extension,Reporting" onclick="openPanel('fdd03')">
+        <div class="card-phase impl">Implementation</div>
+        <div class="card-ref">FDD-03</div>
+        <div class="card-title">PTV Route Planning Integration</div>
+        <div class="card-subtitle">Transport Management · CR003 extended scope</div>
+        <div class="gap-summary"><div class="gap-total">9</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge int">Integration ×5</span><span class="badge ext">Extension ×2</span><span class="badge rep">Reporting ×2</span></div>
+      </div>
+      <div class="fdd-card" data-phase="impl" data-types="Customisation,Extension,Configuration" onclick="openPanel('fdd04')">
+        <div class="card-phase impl">Implementation</div>
+        <div class="card-ref">FDD-04</div>
+        <div class="card-title">Outbound Warehousing &amp; Containerisation</div>
+        <div class="card-subtitle">WMS Outbound · D365 Warehouse Management</div>
+        <div class="gap-summary"><div class="gap-total">9</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge cust">Customisation ×4</span><span class="badge ext">Extension ×3</span><span class="badge config">Config ×2</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swimlane lane-wms" id="lane-wms">
+    <div class="lane-header" onclick="toggleLane('lane-wms')">
+      <div class="lane-title">🏭 Warehouse Operations &amp; Inventory</div>
+      <div style="display:flex;gap:16px;align-items:center"><div class="lane-meta">5 FDDs · 17 gaps</div><div class="lane-toggle">▼</div></div>
+    </div>
+    <div class="lane-body">
+      <div class="fdd-card" data-phase="impl" data-types="Configuration,Extension" onclick="openPanel('fdd05')">
+        <div class="card-phase impl">Implementation</div><div class="card-ref">FDD-05</div>
+        <div class="card-title">Inbound Warehousing &amp; Cross Docking</div>
+        <div class="card-subtitle">WMS Inbound · D365 Warehouse Management</div>
+        <div class="gap-summary"><div class="gap-total">4</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge config">Configuration ×2</span><span class="badge ext">Extension ×2</span></div>
+      </div>
+      <div class="fdd-card" data-phase="impl" data-types="Configuration,Extension" onclick="openPanel('fdd07')">
+        <div class="card-phase impl">Implementation</div><div class="card-ref">FDD-07</div>
+        <div class="card-title">Warehouse Quality Control (QC Locations)</div>
+        <div class="card-subtitle">WMS QC · D365 Warehouse Management</div>
+        <div class="gap-summary"><div class="gap-total">3</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge config">Configuration ×2</span><span class="badge ext">Extension ×1</span></div>
+      </div>
+      <div class="fdd-card" data-phase="impl" data-types="Configuration,Extension" onclick="openPanel('fdd08')">
+        <div class="card-phase impl">Implementation</div><div class="card-ref">FDD-08</div>
+        <div class="card-title">Warehouse Replenishment &amp; Inter-Branch Transfers</div>
+        <div class="card-subtitle">Inventory / WMS · Transfer Orders</div>
+        <div class="gap-summary"><div class="gap-total">4</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge config">Configuration ×2</span><span class="badge ext">Extension ×2</span></div>
+      </div>
+      <div class="fdd-card" data-phase="impl" data-types="Reporting,Extension" onclick="openPanel('fdd09')">
+        <div class="card-phase impl">Implementation</div><div class="card-ref">FDD-09</div>
+        <div class="card-title">Warehouse Management &amp; Reporting</div>
+        <div class="card-subtitle">WMS Reporting · D365 Warehouse Management</div>
+        <div class="gap-summary"><div class="gap-total">4</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge rep">Reporting ×3</span><span class="badge ext">Extension ×1</span></div>
+      </div>
+      <div class="fdd-card" data-phase="pgl" data-types="Customisation" onclick="openPanel('fdd20')">
+        <div class="card-phase pgl">Post Go-Live</div><div class="card-ref">FDD-20</div>
+        <div class="card-title">Warehouse-Level Reservation Days</div>
+        <div class="card-subtitle">DevOps 17585 · Apr 2024 · D365 WMS</div>
+        <div class="gap-summary"><div class="gap-total">2</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge cust">Customisation ×2</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swimlane lane-ret" id="lane-ret">
+    <div class="lane-header" onclick="toggleLane('lane-ret')">
+      <div class="lane-title">↩ Returns Management</div>
+      <div style="display:flex;gap:16px;align-items:center"><div class="lane-meta">1 FDD · 8 gaps</div><div class="lane-toggle">▼</div></div>
+    </div>
+    <div class="lane-body">
+      <div class="fdd-card" data-phase="impl" data-types="Customisation,Extension" onclick="openPanel('fdd06')">
+        <div class="card-phase impl">Implementation</div><div class="card-ref">FDD-06</div>
+        <div class="card-title">Vendor Returns &amp; Return Management Authorisations</div>
+        <div class="card-subtitle">Returns / RMA · D365 Sales &amp; Procurement</div>
+        <div class="gap-summary"><div class="gap-total">8</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge cust">Customisation ×4</span><span class="badge ext">Extension ×3</span><span class="badge config">Config ×1</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swimlane lane-pln" id="lane-pln">
+    <div class="lane-header" onclick="toggleLane('lane-pln')">
+      <div class="lane-title">📊 Demand Planning &amp; Forecasting</div>
+      <div style="display:flex;gap:16px;align-items:center"><div class="lane-meta">1 FDD · 4 gaps</div><div class="lane-toggle">▼</div></div>
+    </div>
+    <div class="lane-body">
+      <div class="fdd-card" data-phase="impl" data-types="Configuration,Extension,Customisation" onclick="openPanel('fdd10')">
+        <div class="card-phase impl">Implementation</div><div class="card-ref">FDD-10</div>
+        <div class="card-title">Master Planning – Direct Material Forecast</div>
+        <div class="card-subtitle">Master Planning · D365 Planning + CR005, CR0025</div>
+        <div class="gap-summary"><div class="gap-total">4</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge config">Config ×1</span><span class="badge ext">Extension ×2</span><span class="badge cust">Customisation ×1</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swimlane lane-pro" id="lane-pro">
+    <div class="lane-header" onclick="toggleLane('lane-pro')">
+      <div class="lane-title">⚙️ Production Control &amp; Manufacturing</div>
+      <div style="display:flex;gap:16px;align-items:center"><div class="lane-meta">2 FDDs · 10 gaps</div><div class="lane-toggle">▼</div></div>
+    </div>
+    <div class="lane-body">
+      <div class="fdd-card" data-phase="cr" data-types="Customisation,Configuration" onclick="openPanel('fdd15')">
+        <div class="card-phase cr">CR Addendum</div><div class="card-ref">FDD-15</div>
+        <div class="card-title">Production Rework &amp; RAF on Master Work Orders</div>
+        <div class="card-subtitle">CR0011, CR016 · Production Control</div>
+        <div class="gap-summary"><div class="gap-total">5</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge cust">Customisation ×4</span><span class="badge config">Config ×1</span></div>
+      </div>
+      <div class="fdd-card" data-phase="pgl" data-types="Configuration" onclick="openPanel('fdd16')">
+        <div class="card-phase pgl">Post Go-Live</div><div class="card-ref">FDD-16</div>
+        <div class="card-title">Sydney Thermal Break Production Process</div>
+        <div class="card-subtitle">WO Sept 2024 · Production Control</div>
+        <div class="gap-summary"><div class="gap-total">5</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge config">Configuration ×5</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swimlane lane-prc" id="lane-prc">
+    <div class="lane-header" onclick="toggleLane('lane-prc')">
+      <div class="lane-title">📦 Procurement &amp; Sourcing</div>
+      <div style="display:flex;gap:16px;align-items:center"><div class="lane-meta">2 FDDs · 6 gaps</div><div class="lane-toggle">▼</div></div>
+    </div>
+    <div class="lane-body">
+      <div class="fdd-card" data-phase="impl" data-types="Configuration,Extension,Customisation" onclick="openPanel('fdd11')">
+        <div class="card-phase impl">Implementation</div><div class="card-ref">FDD-11</div>
+        <div class="card-title">Procurement &amp; Finance – Requisition to Pay</div>
+        <div class="card-subtitle">Procurement &amp; Sourcing · CR005, CR0011, CR0021</div>
+        <div class="gap-summary"><div class="gap-total">4</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge config">Config ×1</span><span class="badge cust">Customisation ×2</span><span class="badge ext">Extension ×1</span></div>
+      </div>
+      <div class="fdd-card" data-phase="pgl" data-types="Customisation" onclick="openPanel('fdd17')">
+        <div class="card-phase pgl">Post Go-Live</div><div class="card-ref">FDD-17</div>
+        <div class="card-title">Overseas PO Approval Workflow</div>
+        <div class="card-subtitle">DevOps 17579 · Apr 2024 · Procurement</div>
+        <div class="gap-summary"><div class="gap-total">2</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge cust">Customisation ×2</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swimlane lane-fin" id="lane-fin">
+    <div class="lane-header" onclick="toggleLane('lane-fin')">
+      <div class="lane-title">💰 Finance – AP, AR &amp; General Ledger</div>
+      <div style="display:flex;gap:16px;align-items:center"><div class="lane-meta">4 FDDs · 12 gaps</div><div class="lane-toggle">▼</div></div>
+    </div>
+    <div class="lane-body">
+      <div class="fdd-card" data-phase="pgl" data-types="Configuration" onclick="openPanel('fdd19')">
+        <div class="card-phase pgl">Post Go-Live</div><div class="card-ref">FDD-19</div>
+        <div class="card-title">ExFlow Vendor Agreement Management</div>
+        <div class="card-subtitle">WO 49699 · Aug 2025 · Accounts Payable</div>
+        <div class="gap-summary"><div class="gap-total">3</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge config">Configuration ×3</span></div>
+      </div>
+      <div class="fdd-card" data-phase="pgl" data-types="Reporting,Customisation" onclick="openPanel('fdd21')">
+        <div class="card-phase pgl">Post Go-Live</div><div class="card-ref">FDD-21</div>
+        <div class="card-title">Inventory to Ledger Reconciliation Report</div>
+        <div class="card-subtitle">WO Sept 2023 · Finance / Inventory GL</div>
+        <div class="gap-summary"><div class="gap-total">2</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge rep">Reporting ×2</span></div>
+      </div>
+      <div class="fdd-card" data-phase="pgl" data-types="Reporting,Customisation" onclick="openPanel('fdd22')">
+        <div class="card-phase pgl">Post Go-Live</div><div class="card-ref">FDD-22</div>
+        <div class="card-title">Open Voyage Costs Report &amp; Auto-Allocation</div>
+        <div class="card-subtitle">WO Nov 2023 · Landed Cost / Finance</div>
+        <div class="gap-summary"><div class="gap-total">3</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge rep">Reporting ×2</span><span class="badge cust">Customisation ×1</span></div>
+      </div>
+      <div class="fdd-card" data-phase="pgl" data-types="Customisation" onclick="openPanel('fdd23')">
+        <div class="card-phase pgl">Post Go-Live</div><div class="card-ref">FDD-23</div>
+        <div class="card-title">IODM Settlement Logic Enhancements</div>
+        <div class="card-subtitle">WO 49854 · Aug 2025 · Accounts Receivable</div>
+        <div class="gap-summary"><div class="gap-total">4</div><div class="gap-total-lbl">gaps addressed</div></div>
+        <div class="gap-badges"><span class="badge cust">Customisation ×4</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swimlane lane-mds" id="lane-mds">
+    <div class="lane-header" onclick="toggleLane('lane-mds')">
+      <div class="lane-title">🔐 Master Data &amp; System Security</div>
+      <div style="display:flex;gap:16px;align-items:center"><div class="lane-meta">2 FDDs · 2 gaps</div><div class="lane-toggle">▼</div></div>
+    </div>
+    <div class="lane-body">
+      <div class="fdd-card" data-phase="cr" data-types="Extension" onclick="openPanel('fdd12')">
+        <div class="card-phase cr">CR Addendum</div><div class="card-ref">FDD-12</div>
+        <div class="card-title">Item Master Extensions – Released Products</div>
+        <div class="card-subtitle">CR001 · Product Information Management</div>
+        <div class="gap-summary"><div class="gap-total">1</div><div class="gap-total-lbl">gap addressed</div></div>
+        <div class="gap-badges"><span class="badge ext">Extension ×1</span></div>
+      </div>
+      <div class="fdd-card" data-phase="cr" data-types="Security" onclick="openPanel('fdd14')">
+        <div class="card-phase cr">CR Addendum</div><div class="card-ref">FDD-14</div>
+        <div class="card-title">Security Roles &amp; Privileges</div>
+        <div class="card-subtitle">CR010 · D365 System Administration</div>
+        <div class="gap-summary"><div class="gap-total">1</div><div class="gap-total-lbl">gap addressed</div></div>
+        <div class="gap-badges"><span class="badge sec">Security ×1</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /swimlanes -->
+
+<!-- FOOTER -->
+<div class="page-footer">
+  <div class="footer-text">Aluminium Specialties Group · D365 F&amp;SCM Implementation · Business Process Gap Map · April 2026</div>
+  <div class="footer-brand">Powered by <span>Fusion5</span> &nbsp;·&nbsp; Transformation Partners</div>
+</div>
+
+<!-- OVERLAY + PANEL -->
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+<div class="gap-panel" id="gap-panel">
+  <div class="panel-header">
+    <button class="panel-close" onclick="closePanel()">✕</button>
+    <div class="p-ref" id="p-ref"></div>
+    <div class="p-title" id="p-title"></div>
+    <div class="p-sub" id="p-sub"></div>
+  </div>
+  <div class="panel-body" id="panel-body"></div>
+</div>
+
+<script>
+const GAP_DATA = {
+  fdd01: {
+    ref: "FDD-01", title: "Sales Order Management (Order to Cash)",
+    sub: "D365 Sales & Marketing · Implementation + CR Addendum",
+    phase: "impl", wo: "US #5254, 5256, 5825, 7131, 5252, 5743 + CR004, CR006, CR0011, CR0018, CR0024",
+    sections: [
+      { heading: "Original Implementation Gaps (6)", gaps: [
+        { id:"G01-01", type:"Extension",     desc:"Mandatory requisition flag on Sales Quotation before confirmation to sales order" },
+        { id:"G01-02", type:"Extension",     desc:"CBD (Cash Before Delivery) payment term visual indicator on Sales Order header" },
+        { id:"G01-03", type:"Extension",     desc:"Low Margin Hold – automatic order hold when line margin falls below configured threshold" },
+        { id:"G01-04", type:"Extension",     desc:"Allow Partial Quantities / Cut Lengths per branch and item — custom parameter on order settings" },
+        { id:"G01-05", type:"Extension",     desc:"Sales Agreement from confirmed quotation — staged delivery releases for project orders" },
+        { id:"G01-06", type:"Customisation", desc:"Free Text Invoice / Credit Note manager approval slider (Approved Yes/No on header)" },
+      ]},
+      { heading: "CR Addendum Extensions (5)", gaps: [
+        { id:"G01-CR1", type:"Customisation", desc:"Direct delivery from alternate branch on SO line — custom inter-branch fulfilment logic" },
+        { id:"G01-CR2", type:"Extension",     desc:"Maximum discount hold — orders exceeding max discount % placed on dedicated hold type" },
+        { id:"G01-CR3", type:"Extension",     desc:"Mixed Transfer Order (TO) and Sales Order (SO) on same PTV Load ID" },
+        { id:"G01-CR4", type:"Extension",     desc:"Block SO deletion when pegged to production order — orphan prevention validation" },
+        { id:"G01-CR5", type:"Extension",     desc:"Freight item exclusion from low margin hold threshold calculation" },
+      ]},
+    ]
+  },
+  fdd02: {
+    ref: "FDD-02", title: "Sales Pricing & Trade Agreements",
+    sub: "D365 Sales & Marketing · Implementation + CR Addendum",
+    phase: "impl", wo: "CR008, CR009, CR0020, CR0024",
+    sections: [
+      { heading: "Original Implementation Gaps (5)", gaps: [
+        { id:"G02-01", type:"Extension",     desc:"Customer price list — consolidated view of customer-specific trade agreement prices" },
+        { id:"G02-02", type:"Customisation", desc:"Sales trade agreement — restricted to firming existing planned orders (no auto-create)" },
+        { id:"G02-03", type:"Customisation", desc:"Purchase trade agreements configuration for direct material procurement" },
+        { id:"G02-04", type:"Extension",     desc:"Selling price enquiry — dedicated enquiry screen for SO line price visibility" },
+        { id:"G02-05", type:"Reporting",     desc:"Outbound label — additional fields (weight, colour, custom finish description)" },
+      ]},
+      { heading: "CR Addendum Extensions (2)", gaps: [
+        { id:"G02-CR1", type:"Customisation", desc:"Custom finish colour groups with surcharge pricing — new setup form and auto-apply to sales price" },
+        { id:"G02-CR2", type:"Extension",     desc:"Label weight from item master net weight on outbound shipping label (SSRS report extension)" },
+      ]},
+    ]
+  },
+  fdd03: {
+    ref: "FDD-03", title: "PTV Route Planning Integration",
+    sub: "Transport Management System · Implementation + CR003 extended scope",
+    phase: "impl", wo: "CR003, CR009 · Dev #8647, 6605, 7050–7061, 7253, 7316, 8877",
+    sections: [
+      { heading: "Original Implementation Gaps (6)", gaps: [
+        { id:"G03-01", type:"Integration", desc:"Load ID creation and management — D365 generates unique Load ID per PTV load" },
+        { id:"G03-02", type:"Integration", desc:"RMA management in PTV — return shipments visible and manageable in PTV routing" },
+        { id:"G03-03", type:"Integration", desc:"Shipment deletion synchronisation — D365 deletions propagated to PTV immediately" },
+        { id:"G03-04", type:"Integration", desc:"Delivery sequence import from PTV — optimised sequence written back to D365 load" },
+        { id:"G03-05", type:"Integration", desc:"Vehicle registration updates — PTV truck registration synced to D365 shipment header" },
+        { id:"G03-06", type:"Integration", desc:"Transfer order visibility in PTV — TOs included in PTV route planning alongside SOs" },
+      ]},
+      { heading: "CR Addendum Extensions (3)", gaps: [
+        { id:"G03-CR1", type:"Extension",  desc:"Load planning list — combined workbench view of open loads with PTV trip status" },
+        { id:"G03-CR2", type:"Extension",  desc:"Cross-dock WMD: SO-to-PO reference display on mixed/single LPN for picker clarity" },
+        { id:"G03-CR3", type:"Reporting",  desc:"Delivery manifest auto-generated on load confirmation — driver/customer document" },
+      ]},
+    ]
+  },
+  fdd04: {
+    ref: "FDD-04", title: "Outbound Warehousing & Containerisation",
+    sub: "D365 Warehouse Management · Implementation",
+    phase: "impl", wo: "CR004, CR006, CR007, CR009 · Dev #5806, 5807, 5808, 6929, 7383, 7384, 9017, 9018, 9021",
+    sections: [
+      { heading: "Gaps Addressed (9)", gaps: [
+        { id:"G04-01", type:"Customisation", desc:"Container consolidation — multiple picking lines consolidated into containers by weight/volume" },
+        { id:"G04-02", type:"Customisation", desc:"Container scanning on WMD — scan to assign and close containers on warehouse mobile device" },
+        { id:"G04-03", type:"Extension",     desc:"Forklift flag on load — marks loads requiring forklift equipment for PTV optimisation" },
+        { id:"G04-04", type:"Extension",     desc:"Load automation — wave auto-creates loads based on release criteria without manual intervention" },
+        { id:"G04-05", type:"Configuration", desc:"Location directive filtering — refined directives for pick zones per product group and warehouse" },
+        { id:"G04-06", type:"Customisation", desc:"WMD access profiles — role-specific WMD menu configurations per warehouse role" },
+        { id:"G04-07", type:"Configuration", desc:"Containerisation wave templates — define container fill logic for automated packing waves" },
+        { id:"G04-08", type:"Customisation", desc:"Dynamic LPN picking — WMD presents LPN options dynamically based on reservation and proximity" },
+        { id:"G04-09", type:"Extension",     desc:"Damage reason codes — capture reason on WMD when marking items damaged during pick/pack" },
+      ]},
+    ]
+  },
+  fdd05: {
+    ref: "FDD-05", title: "Inbound Warehousing & Cross Docking",
+    sub: "D365 Warehouse Management · Implementation",
+    phase: "impl", wo: "CR004, CR007 · Dev #5260, 5784, 6125, 7405",
+    sections: [
+      { heading: "Gaps Addressed (4)", gaps: [
+        { id:"G05-01", type:"Configuration", desc:"Cross-docking policy — direct from inbound receipt to outbound shipment for nominated SKUs" },
+        { id:"G05-02", type:"Extension",     desc:"Pre-populate delivery note number for batch receipting from vendor ASN data" },
+        { id:"G05-03", type:"Configuration", desc:"Vendor GI number capture — record vendor delivery note reference on PO receipt journal" },
+        { id:"G05-04", type:"Extension",     desc:"Short supply handling on WMD — pick fewer than ordered qty with reason code and notification" },
+      ]},
+    ]
+  },
+  fdd06: {
+    ref: "FDD-06", title: "Vendor Returns & Return Management Authorisations (RMAs)",
+    sub: "D365 Sales & Procurement · Implementation",
+    phase: "impl", wo: "CR006, CR007, CR014 · Dev #11871, 11901, 11902, 11903",
+    sections: [
+      { heading: "Gaps Addressed (8)", gaps: [
+        { id:"G06-01", type:"Customisation", desc:"RMA creation — return order from customer including disposition codes and credit note generation" },
+        { id:"G06-02", type:"Customisation", desc:"Vendor return order — PO return with shipment and credit debit note to vendor" },
+        { id:"G06-03", type:"Extension",     desc:"Return order RMA number — auto-generate RMA number on return order creation" },
+        { id:"G06-04", type:"Customisation", desc:"Customer return: pick returned goods to QC location and inspect before restocking" },
+        { id:"G06-05", type:"Extension",     desc:"Return reason codes — mandatory reason code capture on both customer and vendor returns" },
+        { id:"G06-06", type:"Customisation", desc:"RMA management in PTV — return shipments appear in PTV for reverse logistics routing" },
+        { id:"G06-07", type:"Configuration", desc:"Disposition codes — define restocking, scrap, and repair dispositions for returned items" },
+        { id:"G06-08", type:"Extension",     desc:"Return order issues — corrections to return order posting and credit note flow identified pre-go-live" },
+      ]},
+    ]
+  },
+  fdd07: {
+    ref: "FDD-07", title: "Warehouse Quality Control (QC Locations)",
+    sub: "D365 Warehouse Management · Implementation",
+    phase: "impl", wo: "CR005, CR006 · Dev #6881, 5826, 7117",
+    sections: [
+      { heading: "Gaps Addressed (3)", gaps: [
+        { id:"G07-01", type:"Configuration", desc:"QC location configuration — designated quality hold locations in warehouse for quarantined stock" },
+        { id:"G07-02", type:"Configuration", desc:"Transfer issue approval — workflow approval required before stock can be transferred from QC location" },
+        { id:"G07-03", type:"Extension",     desc:"Work card WMD fields — quality control fields added to WMD work card for inspection capture" },
+      ]},
+    ]
+  },
+  fdd08: {
+    ref: "FDD-08", title: "Warehouse Replenishment & Inter-Branch Transfers",
+    sub: "D365 Inventory / WMS · Implementation",
+    phase: "impl", wo: "CR004, CR006, CR008 · Dev #5710, 5806, 6402, 7381",
+    sections: [
+      { heading: "Gaps Addressed (4)", gaps: [
+        { id:"G08-01", type:"Configuration", desc:"Stock on hand review — multi-branch stock visibility at sales order entry for sourcing decisions" },
+        { id:"G08-02", type:"Extension",     desc:"Direct delivery from another branch — inter-branch fulfilment visible at order line level" },
+        { id:"G08-03", type:"Configuration", desc:"Safety stock configuration — minimum stock levels per item per warehouse for replenishment triggering" },
+        { id:"G08-04", type:"Extension",     desc:"ABC codes on items — inventory classification for cycle count frequency and replenishment prioritisation" },
+      ]},
+    ]
+  },
+  fdd09: {
+    ref: "FDD-09", title: "Warehouse Management & Reporting",
+    sub: "D365 Warehouse Management · Implementation",
+    phase: "impl", wo: "CR005, CR006 · Dev #6294, 7056, 9025, 9026",
+    sections: [
+      { heading: "Gaps Addressed (4)", gaps: [
+        { id:"G09-01", type:"Reporting", desc:"Cycle count reports — discrepancy report and count journal summary for finance reconciliation" },
+        { id:"G09-02", type:"Reporting", desc:"Outbound warehousing reports — picking summary, container manifest, daily dispatch summary" },
+        { id:"G09-03", type:"Reporting", desc:"Location reports — location utilisation, empty locations, location directive effectiveness" },
+        { id:"G09-04", type:"Extension", desc:"Floor stock holds — warehouse manager can place hold on floor stock with reason code and alert" },
+      ]},
+    ]
+  },
+  fdd10: {
+    ref: "FDD-10", title: "Master Planning – Direct Material Forecast",
+    sub: "D365 Master Planning · Implementation + CR005, CR0025",
+    phase: "impl", wo: "CR005, CR0025 · Dev #6911, 6912, 6913, 15015",
+    sections: [
+      { heading: "Gaps Addressed (4)", gaps: [
+        { id:"G10-01", type:"Configuration",  desc:"Direct material demand forecast — planned orders generated from sales quotation demand signals" },
+        { id:"G10-02", type:"Customisation",  desc:"Mass update of planned orders — bulk update qty, date, status, coverage group via dialog" },
+        { id:"G10-03", type:"Extension",      desc:"Additional fields on Planned Orders form — item group, coverage group, buyer group, site available qty for enhanced filtering" },
+        { id:"G10-04", type:"Extension",      desc:"Planned order exclusion logic — flag planned orders to exclude from firming runs without deletion" },
+      ]},
+    ]
+  },
+  fdd11: {
+    ref: "FDD-11", title: "Procurement & Finance – Requisition to Pay",
+    sub: "D365 Procurement & Sourcing · Implementation + CR0011, CR0021",
+    phase: "impl", wo: "CR005, CR0011, CR0021 · Dev #7057, 11781, 13844",
+    sections: [
+      { heading: "Gaps Addressed (4)", gaps: [
+        { id:"G11-01", type:"Configuration",  desc:"Purchase requisition — default vendor and financial dimension auto-population on requisition creation" },
+        { id:"G11-02", type:"Customisation",  desc:"Subcontractor PO to Transfer Order — PO to subcontractor triggers auto-creation of transfer order" },
+        { id:"G11-03", type:"Customisation",  desc:"Subcontractor PO bulk receive and RAF — receive all lines in bulk and Report as Finished simultaneously" },
+        { id:"G11-04", type:"Extension",      desc:"Automated release to warehouse batch job — scheduled batch releases qualified SOs to warehouse without manual intervention" },
+      ]},
+    ]
+  },
+  fdd12: {
+    ref: "FDD-12", title: "Item Master Extensions – Released Products",
+    sub: "D365 Product Information Management · CR001 (July 2021)",
+    phase: "cr", wo: "CR001",
+    sections: [
+      { heading: "Gap Addressed (1)", gaps: [
+        { id:"G12-01", type:"Extension", desc:"Custom AX2009 legacy item fields added to D365 Released Products table — new 'Alspec Product Details' fast tab, fields migrated from AX2009 via DIXF data entity" },
+      ]},
+    ]
+  },
+  fdd13: {
+    ref: "FDD-13", title: "Custom Colour Selection & Custom Finish Workflow",
+    sub: "D365 Sales Quotation & Pricing · CR002, CR0018, CR0020",
+    phase: "cr", wo: "CR002 / Dev #6938, 8888 · CR0020 / Dev #13104",
+    sections: [
+      { heading: "Gaps Addressed (3)", gaps: [
+        { id:"G13-01", type:"Customisation", desc:"Custom colour code selection at sales quotation line level without creating a BOM version — free-text colour field with eligible item flag" },
+        { id:"G13-02", type:"Extension",     desc:"Validation blocking conversion of generic custom colour quotation to sales order — must have valid colour code" },
+        { id:"G13-03", type:"Customisation", desc:"Custom finish colour groups with surcharge pricing — administrator-defined colour tiers auto-applying surcharge to sales price" },
+      ]},
+    ]
+  },
+  fdd14: {
+    ref: "FDD-14", title: "Security Roles & Privileges",
+    sub: "D365 System Administration · CR010 (October 2021)",
+    phase: "cr", wo: "CR010 / Dev #11250",
+    sections: [
+      { heading: "Gap Addressed (1)", gaps: [
+        { id:"G14-01", type:"Security", desc:"Full D365 security role, duty, and privilege setup for all Alspec user groups — includes custom duties for AlsFreeTextInvoiceApproverDuty, AlsLowMarginHoldMaintainDuty, AlsWMDLocationOverrideDuty, AlsColourGroupMaintainDuty, SoD conflict resolution" },
+      ]},
+    ]
+  },
+  fdd15: {
+    ref: "FDD-15", title: "Production Rework & RAF on Master Work Orders",
+    sub: "D365 Production Control · CR0011, CR016",
+    phase: "cr", wo: "CR0011 / Dev #11358, 11359, 11362, 11363 · CR016 / Dev #12106",
+    sections: [
+      { heading: "Gaps Addressed (5)", gaps: [
+        { id:"G15-01", type:"Customisation", desc:"Good/bad quantity capture per operation on route journal — split good and defective output at each production step" },
+        { id:"G15-02", type:"Customisation", desc:"Auto-raise rework production order per operation — each defective operation automatically creates a linked rework PO" },
+        { id:"G15-03", type:"Customisation", desc:"Auto-peg rework production order against originating sales order — maintains demand traceability through rework cycle" },
+        { id:"G15-04", type:"Configuration", desc:"Rework location workflow — location directive routes rework output to dedicated rework staging location" },
+        { id:"G15-05", type:"Customisation", desc:"RAF (Receipt and Finish) on Master Work Order from UI — cannot RAF MWO from standard D365 UI; custom RAF button added to MWO form" },
+      ]},
+    ]
+  },
+  fdd16: {
+    ref: "FDD-16", title: "Sydney Thermal Break Production Process",
+    sub: "D365 Production Control · WO September 2024",
+    phase: "pgl", wo: "WO Thermal Break Sept 2024 (no development — configuration only)",
+    sections: [
+      { heading: "Gaps Addressed (5)", gaps: [
+        { id:"G16-01", type:"Configuration", desc:"2 separate Master Work Orders for Sydney thermal break: MWO-1 (painting) + MWO-2 (assembly) with distinct routes and resources" },
+        { id:"G16-02", type:"Configuration", desc:"New sub-assembly item as intermediate output from painting phase — semi-finished good item configuration" },
+        { id:"G16-03", type:"Configuration", desc:"New resource group and route for Sydney thermal break assembly machine (dedicated — not shared with Melbourne)" },
+        { id:"G16-04", type:"Configuration", desc:"Auto-pick and cross-dock of painted materials from painting MWO to assembly MWO and sales order" },
+        { id:"G16-05", type:"Configuration", desc:"Thermal break strip and ancillary materials configured for backflushing from PRODIN location" },
+      ]},
+    ]
+  },
+  fdd17: {
+    ref: "FDD-17", title: "Overseas Purchase Order Approval Workflow",
+    sub: "D365 Procurement & Sourcing · DevOps 17579 (April 2024)",
+    phase: "pgl", wo: "DevOps 17579 · 34 hrs · ~$8,360 excl. GST",
+    sections: [
+      { heading: "Gaps Addressed (2)", gaps: [
+        { id:"G17-01", type:"Customisation", desc:"Overseas PO approval workflow does not reflect Alspec's approval hierarchy and value-threshold routing for imported goods" },
+        { id:"G17-02", type:"Customisation", desc:"Workflow routing logic requires modification for overseas vendor classification and multi-level approval hierarchy" },
+      ]},
+    ]
+  },
+  fdd18: {
+    ref: "FDD-18", title: "Customer Portal Quote Integration API",
+    sub: "D365 Sales & Marketing / OData · WO 50717 (September 2025)",
+    phase: "pgl", wo: "WO 50717 · ~$25,000+ excl. GST · ~84 hrs development",
+    sections: [
+      { heading: "Gaps Addressed (5)", gaps: [
+        { id:"G18-01", type:"Integration", desc:"No automated interface between Alspec customer portal and D365 for quote creation — manual re-entry required post go-live" },
+        { id:"G18-02", type:"Integration", desc:"Existing EA Sales Order data entity in partner code not accessible for modification — new independent public entity required" },
+        { id:"G18-03", type:"Extension",   desc:"Quote Lines standard entity does not include FUS_CustomColorDescription field needed by portal integration" },
+        { id:"G18-04", type:"Integration", desc:"No service available for customer portal to retrieve customer remaining credit limit from D365" },
+        { id:"G18-05", type:"Integration", desc:"No mechanism to generate and return PDF documents (Invoice, Despatch Note, Statement) as Base64 output to portal" },
+      ]},
+    ]
+  },
+  fdd19: {
+    ref: "FDD-19", title: "ExFlow Vendor Agreement Management",
+    sub: "D365 Accounts Payable / ExFlow ISV · WO 49699 (August 2025)",
+    phase: "pgl", wo: "WO 49699 · Configuration only (no D365 custom development)",
+    sections: [
+      { heading: "Gaps Addressed (3)", gaps: [
+        { id:"G19-01", type:"Configuration", desc:"AP team manually matching and approving invoices tied to vendor agreements — no automated agreement-based approval in ExFlow" },
+        { id:"G19-02", type:"Configuration", desc:"Agreement number not captured in ExFlow OCR import XSLT mapping, preventing automatic agreement matching from data capture" },
+        { id:"G19-03", type:"Configuration", desc:"No workflow routing path for invoices exceeding agreement conditions — over-limit invoices require manual approval escalation" },
+      ]},
+    ]
+  },
+  fdd20: {
+    ref: "FDD-20", title: "Warehouse-Level Reservation Days Configuration",
+    sub: "D365 Warehouse Management · DevOps 17585 (April 2024)",
+    phase: "pgl", wo: "DevOps 17585 · 24 hrs functional/development",
+    sections: [
+      { heading: "Gaps Addressed (2)", gaps: [
+        { id:"G20-01", type:"Customisation", desc:"Standard D365 reservation days are global only — Alspec requires different reservation windows per warehouse (Days in Future / Days in Past)" },
+        { id:"G20-02", type:"Customisation", desc:"No warehouse-level override with fallback to global defaults — new Enabled flag + FastTab on Warehouse form, modifications to SO line, release batch, auto-reservation batch, Build LPN" },
+      ]},
+    ]
+  },
+  fdd21: {
+    ref: "FDD-21", title: "Inventory to Ledger Reconciliation Report",
+    sub: "D365 Finance / Inventory Management · WO September 2023",
+    phase: "pgl", wo: "WO Inventory to Ledger Reconciliation (Sept 2023)",
+    sections: [
+      { heading: "Gaps Addressed (2)", gaps: [
+        { id:"G21-01", type:"Reporting", desc:"No automated tool in D365 to reconcile inventory GL accounts against inventory subsidiary ledger — finance team performing fully manual reconciliation downloading raw data" },
+        { id:"G21-02", type:"Reporting", desc:"Manual reconciliation process prone to error; differences not surfaced in a structured, auditable format with voucher-level exception reporting" },
+      ]},
+    ]
+  },
+  fdd22: {
+    ref: "FDD-22", title: "Open Voyage Costs Report & Cost Auto-Allocation",
+    sub: "D365 Landed Cost / Finance · WO November 2023",
+    phase: "pgl", wo: "WO Open Voyage Costs (Nov 2023) · Suspense accounts 30074 & 30115",
+    sections: [
+      { heading: "Gaps Addressed (3)", gaps: [
+        { id:"G22-01", type:"Customisation", desc:"No automated allocation of total shipping cost across voyage cost codes — manual calculation required using Debit × Extended Value ÷ Sum(Extended Values)" },
+        { id:"G22-02", type:"Reporting",     desc:"No SSRS report to track open voyage costs and their impact on suspense accounts 30074 (GRNI) and 30115 (Imports Misc Charges)" },
+        { id:"G22-03", type:"Reporting",     desc:"Finance team cannot readily identify which voyages are pending cost accrual/reversal — no current-snapshot open voyage cost view" },
+      ]},
+    ]
+  },
+  fdd23: {
+    ref: "FDD-23", title: "IODM Settlement Logic Enhancements",
+    sub: "D365 Accounts Receivable / IODM · WO 49854 (August 2025)",
+    phase: "pgl", wo: "WO 49854 · 14 hrs · Fusion5 Integration Module",
+    sections: [
+      { heading: "Gaps Addressed (4)", gaps: [
+        { id:"G23-01", type:"Customisation", desc:"IODM settlement processes entire file as a unit — single errored group causes all valid groups in the file to fail, preventing straight-through processing" },
+        { id:"G23-02", type:"Customisation", desc:"No mechanism to isolate errored settlement lines for manual processing — entire settlement file must be reprocessed from scratch" },
+        { id:"G23-03", type:"Customisation", desc:"Intermittent financial period error during IODM settlement posting — root cause requires investigation alongside logic improvements" },
+        { id:"G23-04", type:"Customisation", desc:"No parameter to force settlement date to Latest Date per D365 standard settlement logic — causes financial period mismatches" },
+      ]},
+    ]
+  },
+};
+
+
+const TYPE_CLASS = {
+  "Extension":"ext","Customisation":"cust","Configuration":"config",
+  "Integration":"int","Reporting":"rep","Security":"sec"
+};
+const PHASE_LABEL = { impl:"Implementation", cr:"CR Addendum", pgl:"Post Go-Live" };
+
+function openPanel(id) {
+  const d = GAP_DATA[id]; if (!d) return;
+  document.getElementById('p-ref').textContent   = d.ref;
+  document.getElementById('p-title').textContent = d.title;
+  document.getElementById('p-sub').textContent   = d.sub;
+  let html = `<div class="meta-row">
+    <span class="meta-chip ${d.phase}">${PHASE_LABEL[d.phase]}</span>
+    <span class="meta-chip wo">FDD Reference: ${d.ref}</span></div>
+    <div class="devops-ref panel-section"><strong>Work Items / Sources:</strong> ${d.wo}</div>`;
+  d.sections.forEach(s => {
+    html += `<div class="panel-section"><div class="panel-section-title">${s.heading}</div>`;
+    s.gaps.forEach(g => {
+      const cls = TYPE_CLASS[g.type] || 'ext';
+      html += `<div class="gap-item" style="border-left-color:var(--${cls}-border)">
+        <div><div class="gap-id">${g.id}</div><span class="badge ${cls}" style="margin-top:4px;display:inline-block">${g.type}</span></div>
+        <div class="gap-desc">${g.desc}</div></div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('panel-body').innerHTML = html;
+  document.getElementById('gap-panel').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closePanel() {
+  document.getElementById('gap-panel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+function toggleLane(id) { document.getElementById(id).classList.toggle('collapsed'); }
+let activePhase = 'all', activeType = null;
+function filterPhase(phase) {
+  activePhase = phase; activeType = null;
+  document.querySelectorAll('[data-gtype]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('[data-phase]').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-phase="${phase}"]`).classList.add('active');
+  applyFilter();
+}
+function filterType(type) {
+  activeType = (activeType === type) ? null : type; activePhase = 'all';
+  document.querySelectorAll('[data-phase]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('[data-gtype]').forEach(b => b.classList.remove('active'));
+  document.querySelector('[data-phase="all"]').classList.add('active');
+  if (activeType) document.querySelector(`[data-gtype="${type}"]`).classList.add('active');
+  applyFilter();
+}
+function applyFilter() {
+  document.querySelectorAll('.fdd-card').forEach(card => {
+    const cardPhase = card.dataset.phase;
+    const cardTypes = (card.dataset.types || '').split(',');
+    let show = true;
+    if (activePhase !== 'all' && cardPhase !== activePhase) show = false;
+    if (activeType && !cardTypes.includes(activeType)) show = false;
+    card.classList.toggle('dimmed', !show);
+  });
+}
+</script>
+</body>
+</html>
